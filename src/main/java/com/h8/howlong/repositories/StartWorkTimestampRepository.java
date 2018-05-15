@@ -2,15 +2,24 @@ package com.h8.howlong.repositories;
 
 import com.h8.howlong.domain.StartWorkTimestamp;
 
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.Optional;
 
 public class StartWorkTimestampRepository {
 
     private final static String DB_FILE_NAME = "./_db";
+
+    public StartWorkTimestampRepository() {
+        try {
+            File yourFile = new File(DB_FILE_NAME);
+            if (yourFile.createNewFile()) {
+                System.out.println("Created file: " + DB_FILE_NAME);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("ERROR: Could not create file: " + DB_FILE_NAME);
+        }
+    }
 
     public Optional<StartWorkTimestamp> save(StartWorkTimestamp timestamp) {
         try (
