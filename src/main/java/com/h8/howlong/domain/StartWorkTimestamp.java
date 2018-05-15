@@ -1,26 +1,19 @@
 package com.h8.howlong.domain;
 
-import com.h8.howlong.converters.LocalDateTimeConverter;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
-@Entity
-public class StartWorkTimestamp {
+public class StartWorkTimestamp implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
-    private Long id;
+    private final LocalDateTime timestamp;
 
-    @Convert(converter = LocalDateTimeConverter.class)
-    private LocalDateTime timestamp;
+    public boolean isTimestampOfToday() {
+        return LocalDateTime.now().getDayOfYear() == timestamp.getDayOfYear();
+    }
 
 }
