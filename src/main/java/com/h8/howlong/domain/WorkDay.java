@@ -4,13 +4,14 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
 public class WorkDay implements Serializable {
 
-    private final WorkTimestamp start;
+    private final LocalDateTime start;
 
-    private WorkTimestamp end;
+    private LocalDateTime end;
 
 }

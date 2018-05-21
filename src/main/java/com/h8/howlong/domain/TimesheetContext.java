@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.Singular;
 
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 public class TimesheetContext implements Serializable {
 
     @Singular
-    private final Map<Integer, WorkDay> timesheets;
+    private final Map<LocalDate, WorkDay> timesheets;
 
     public TimesheetContext() {
         this.timesheets = new HashMap<>();

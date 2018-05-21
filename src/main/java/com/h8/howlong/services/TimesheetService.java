@@ -1,7 +1,6 @@
 package com.h8.howlong.services;
 
 import com.h8.howlong.domain.WorkDay;
-import com.h8.howlong.domain.WorkTimestamp;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -10,24 +9,21 @@ public class TimesheetService {
 
     private TimesheetContextService service;
 
-    public TimesheetService() {
-        this.service = new TimesheetContextService();
+    public TimesheetService(TimesheetContextService service) {
+        this.service = service;
     }
 
     public WorkDay updateWorkDay() {
         WorkDay wd = getWorkDayOfToday();
-        wd.setEnd(WorkTimestamp.builder()
-                .timestamp(LocalDateTime.now())
-                .build());
-        service.updateWorkDay(wd);
-        return wd;
+        wd.setEnd(LocalDateTime.now());
+        return service.updateWorkDay(wd);
     }
 
     public Duration getElapsedTime() {
         WorkDay wd = getWorkDayOfToday();
         return Duration.between(
-                wd.getStart().getTimestamp(),
-                wd.getEnd().getTimestamp());
+                wd.getStart(),
+                wd.getEnd());
     }
 
     public Duration getRemainingTime() {
