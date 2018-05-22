@@ -5,6 +5,7 @@ import com.h8.howlong.services.TimesheetService;
 import com.h8.howlong.utils.CalendarPrinter;
 import com.h8.howlong.utils.DurationUtils;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 
 public class HowLongApplication {
@@ -14,13 +15,18 @@ public class HowLongApplication {
     private static final TimesheetService service = new TimesheetService(contextService);
 
     public static void main(String[] args) {
-        if (args.length > 0 && "calendar".equals(args[0])) {
+        ArgumentResolver arguments = new ArgumentResolver(args);
+        if (arguments.calendarMode()) {
             System.out.println(
                     "-----------------------------------------------------------------------------------");
             System.out.print(new CalendarPrinter()
-                    .printCurrentMonth(contextService.getTimesheets().values()));
+                    .printMonth(
+                            arguments.calendarMonth(),
+                            contextService.getTimesheets().values()));
             System.out.println(
                     "-----------------------------------------------------------------------------------");
+            Duration total = contextService.getTotalWorkingTime(arguments.calendarMonth());
+            System.out.println("Total: " + DurationUtils.format(total));
         } else {
             LocalDateTime startTime = service.updateWorkDay().getStart();
             System.out.println("Today is " + startTime.toLocalDate());

@@ -51,7 +51,8 @@ class CalendarPrinterTest {
                         .end(timeBaseline.plusDays(10).plusHours(8))
                         .build()
         );
-        System.out.print(new CalendarPrinter().printCurrentMonth(weekDays));
+        System.out.print(new CalendarPrinter()
+                .printMonth(timeBaseline.getDayOfMonth(), weekDays));
     }
 
 }

@@ -11,8 +11,8 @@ import java.util.stream.Stream;
 
 public class CalendarPrinter {
 
-    public String printCurrentMonth(Collection<WorkDay> workDays) {
-        Iterator<WorkDay> i = createCurrentMonthIterator(workDays);
+    public String printMonth(int month, Collection<WorkDay> workDays) {
+        Iterator<WorkDay> i = createMonthIterator(month, workDays);
         StringBuilder sb = new StringBuilder();
         sb = printHeader(sb);
         sb = printNewLine(sb);
@@ -20,12 +20,12 @@ public class CalendarPrinter {
         return printNewLine(sb).toString();
     }
 
-    private Iterator<WorkDay> createCurrentMonthIterator(Collection<WorkDay> workDays)  {
+    private Iterator<WorkDay> createMonthIterator(int month, Collection<WorkDay> workDays)  {
         LocalDate today = LocalDate.now();
         return workDays
                 .stream()
                 .filter(d -> today.getYear() == d.getStart().getYear())
-                .filter(d -> today.getMonthValue() == d.getStart().getMonthValue())
+                .filter(d -> today.getMonthValue() == month)
                 .sorted(Comparator.comparing(WorkDay::getStart))
                 .iterator();
     }
@@ -66,9 +66,7 @@ public class CalendarPrinter {
                 workDay.getStart().toLocalTime(),
                 workDay.getEnd().toLocalTime());
         int dayOfMonth = workDay.getStart().getDayOfMonth();
-        long hours = d.toHours();
-        long minutes = d.minusHours(hours).toMinutes();
-        return sb.append(String.format(" #%02d %02d:%02d ", dayOfMonth, hours, minutes));
+        return sb.append(String.format(" #%02d %s ", dayOfMonth, DurationUtils.format(d)));
     }
 
     private StringBuilder printHeader(StringBuilder sb) {

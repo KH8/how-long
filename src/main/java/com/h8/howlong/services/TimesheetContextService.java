@@ -4,6 +4,7 @@ import com.h8.howlong.domain.TimesheetContext;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.repositories.TimesheetContextRepository;
 
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -38,6 +39,17 @@ public class TimesheetContextService {
         timesheets.put(key, wd);
         repository.writeContent(context);
         return wd;
+    }
+
+    public Duration getTotalWorkingTime(int month) {
+        LocalDate today = LocalDate.now();
+        return timesheets.values()
+                .stream()
+                .filter(d -> today.getYear() == d.getStart().getYear())
+                .filter(d -> today.getMonthValue() == month)
+                .map(d -> Duration.between(d.getStart(), d.getEnd()))
+                .reduce(Duration::plus)
+                .orElse(Duration.ZERO);
     }
 
     public Map<LocalDate, WorkDay> getTimesheets() {
