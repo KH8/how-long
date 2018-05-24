@@ -7,7 +7,7 @@ import java.util.Optional;
 
 public abstract class AbstractFileBasedRepository<T> {
 
-    private String dbFileName;
+    private final String dbFileName;
 
     AbstractFileBasedRepository(String dbFileName) {
         this.dbFileName = dbFileName;
