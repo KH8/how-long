@@ -1,4 +1,4 @@
-package com.h8.howlong.utils;
+package com.h8.howlong.printers;
 
 import java.time.DayOfWeek;
 

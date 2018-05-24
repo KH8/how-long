@@ -1,33 +1,19 @@
-package com.h8.howlong.utils;
+package com.h8.howlong.printers;
 
 import com.h8.howlong.domain.WorkDay;
+import com.h8.howlong.utils.DurationUtils;
 
 import java.time.Duration;
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public class CalendarPrinter {
+public class CalendarPrinter extends AbstractPrinter {
 
-    public String printMonth(int month, Collection<WorkDay> workDays) {
-        Iterator<WorkDay> i = createMonthIterator(month, workDays);
-        StringBuilder sb = new StringBuilder();
+    @Override
+    protected StringBuilder print(StringBuilder sb, Iterator<WorkDay> i) {
         sb = printHeader(sb);
-        sb = printNewLine(sb);
         sb = printWorkDays(sb, i);
-        return printNewLine(sb).toString();
-    }
-
-    private Iterator<WorkDay> createMonthIterator(int month, Collection<WorkDay> workDays)  {
-        LocalDate today = LocalDate.now();
-        return workDays
-                .stream()
-                .filter(d -> today.getYear() == d.getStart().getYear())
-                .filter(d -> today.getMonthValue() == month)
-                .sorted(Comparator.comparing(WorkDay::getStart))
-                .iterator();
+        return printNewLine(sb);
     }
 
     private StringBuilder printWorkDays(StringBuilder sb, Iterator<WorkDay> iterator) {
@@ -78,7 +64,7 @@ public class CalendarPrinter {
                 sb = printSeparator(sb);
             }
         }
-        return sb;
+        return printNewLine(sb);
     }
 
     private StringBuilder printBlank(StringBuilder sb) {
@@ -96,5 +82,4 @@ public class CalendarPrinter {
     private StringBuilder printElement(StringBuilder sb, String content) {
         return sb.append("   ").append(content).append("   ");
     }
-
 }

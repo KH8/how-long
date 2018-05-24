@@ -14,6 +14,10 @@ public class ArgumentResolver {
         return args.length > 0 && "calendar".equals(args[0]);
     }
 
+    public Boolean listMode() {
+        return args.length > 0 && "list".equals(args[0]);
+    }
+
     public Integer calendarMonth() {
         return calendarMode() && args.length > 1 ?
                 Integer.parseInt(args[1]) : LocalDate.now().getMonthValue();
