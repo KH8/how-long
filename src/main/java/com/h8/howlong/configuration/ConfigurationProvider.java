@@ -7,16 +7,20 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ConfigurationProvider {
-    
+
     private final static String PROPERTIES_FILE_NAME = "com/h8/howlong/howlong.properties";
 
-    private final static String PLACEHOLDER_REGEX = "\\{(.*?)\\}";
+    private final static String PLACEHOLDER_REGEX = "\\{(.*?)}";
 
     private final Properties properties;
 
-    public ConfigurationProvider()
-            throws IOException {
-        this.properties = loadProperties();
+    public ConfigurationProvider() {
+        try {
+            this.properties = loadProperties();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new IllegalStateException("Configuration could not be initialized");
+        }
     }
 
     private Properties loadProperties()

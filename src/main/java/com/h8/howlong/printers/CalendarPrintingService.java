@@ -1,16 +1,33 @@
 package com.h8.howlong.printers;
 
 import com.h8.howlong.domain.WorkDay;
+import com.h8.howlong.services.TimesheetContextService;
+import com.h8.howlong.utils.CalendarDayOfWeek;
 import com.h8.howlong.utils.DurationUtils;
 
 import java.time.Duration;
 import java.util.Iterator;
 import java.util.stream.Stream;
 
-public class CalendarPrinter extends AbstractPrinter {
+public class CalendarPrintingService implements PrintingService {
+
+    private final TimesheetContextService contextService;
+
+    CalendarPrintingService(TimesheetContextService contextService) {
+        this.contextService = contextService;
+    }
 
     @Override
-    protected StringBuilder print(StringBuilder sb, Iterator<WorkDay> i) {
+    public String print(int month) {
+        return "-----------------------------------------------------------------------------------" +
+                LS + print(contextService.getTimesheetForMonth(month).iterator()) +
+                "-----------------------------------------------------------------------------------" +
+                LS + "Total: " + DurationUtils.format(contextService.getTotalWorkingTime(month)) +
+                LS + "Average: " + DurationUtils.format(contextService.getAverageWorkingTime(month));
+    }
+
+    private StringBuilder print(Iterator<WorkDay> i) {
+        StringBuilder sb = new StringBuilder();
         sb = printHeader(sb);
         sb = printWorkDays(sb, i);
         return printNewLine(sb);
@@ -82,4 +99,5 @@ public class CalendarPrinter extends AbstractPrinter {
     private StringBuilder printElement(StringBuilder sb, String content) {
         return sb.append("   ").append(content).append("   ");
     }
+
 }

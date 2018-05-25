@@ -1,6 +1,7 @@
 package com.h8.howlong.printers;
 
 import com.h8.howlong.domain.WorkDay;
+import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
 
 import java.time.Duration;
@@ -8,10 +9,25 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Iterator;
 
-public class ListPrinter extends AbstractPrinter {
+public class ListPrintingService implements PrintingService {
+
+    private final TimesheetContextService contextService;
+
+    ListPrintingService(TimesheetContextService contextService) {
+        this.contextService = contextService;
+    }
 
     @Override
-    protected StringBuilder print(StringBuilder sb, Iterator<WorkDay> i) {
+    public String print(int month) {
+        return "-------------------------------------" +
+                LS + print(contextService.getTimesheetForMonth(month).iterator()).toString() +
+                "-------------------------------------" +
+                LS + "Total: " + DurationUtils.format(contextService.getTotalWorkingTime(month)) +
+                LS + "Average: " + DurationUtils.format(contextService.getAverageWorkingTime(month));
+    }
+
+    private StringBuilder print(Iterator<WorkDay> i) {
+        StringBuilder sb = new StringBuilder();
         sb = printHeader(sb);
         sb = printHeaderSeparator(sb);
         return printWorkDays(sb, i);

@@ -7,7 +7,10 @@ import com.h8.howlong.repositories.TimesheetContextRepository;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 public class TimesheetContextService {
 
@@ -17,8 +20,8 @@ public class TimesheetContextService {
 
     private Map<LocalDate, WorkDay> timesheets;
 
-    public TimesheetContextService() {
-        this.repository = new TimesheetContextRepository();
+    public TimesheetContextService(TimesheetContextRepository repository) {
+        this.repository = repository;
         this.context = repository.readContent()
                 .orElseThrow(() -> new IllegalStateException("Repository has not been initialized properly"));
         this.timesheets = context.getTimesheets();
@@ -42,18 +45,27 @@ public class TimesheetContextService {
     }
 
     public Duration getTotalWorkingTime(int month) {
-        LocalDate today = LocalDate.now();
-        return timesheets.values()
+        return getTimesheetForMonth(month)
                 .stream()
-                .filter(d -> today.getYear() == d.getStart().getYear())
-                .filter(d -> today.getMonthValue() == month)
                 .map(d -> Duration.between(d.getStart(), d.getEnd()))
                 .reduce(Duration::plus)
                 .orElse(Duration.ZERO);
     }
 
-    public Map<LocalDate, WorkDay> getTimesheets() {
-        return timesheets;
+    public Duration getAverageWorkingTime(int month) {
+        Duration total = getTotalWorkingTime(month);
+        int count = getTimesheetForMonth(month).size();
+        return Duration.ofMillis(total.toMillis() / Math.max(count, 1));
+    }
+
+    public List<WorkDay> getTimesheetForMonth(int month) {
+        LocalDate today = LocalDate.now();
+        return timesheets.values()
+                .stream()
+                .filter(d -> today.getYear() == d.getStart().getYear())
+                .filter(d -> today.getMonthValue() == month)
+                .sorted(Comparator.comparing(WorkDay::getStart))
+                .collect(Collectors.toList());
     }
 
     private WorkDay createWorkDayOfToday() {
