@@ -1,11 +1,13 @@
 package com.h8.howlong.printers;
 
+import com.google.inject.Inject;
 import com.h8.howlong.services.TimesheetContextService;
 
 public class PrintingServiceFactory {
 
     private final TimesheetContextService contextService;
 
+    @Inject
     public PrintingServiceFactory(TimesheetContextService contextService) {
         this.contextService = contextService;
     }

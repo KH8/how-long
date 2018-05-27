@@ -2,7 +2,7 @@ package com.h8.howlong.utils;
 
 import java.time.DayOfWeek;
 
-public enum  CalendarDayOfWeek {
+public enum CalendarDayOfWeek {
     MON(DayOfWeek.MONDAY),
     TUE(DayOfWeek.TUESDAY),
     WED(DayOfWeek.WEDNESDAY),

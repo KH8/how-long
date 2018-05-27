@@ -1,5 +1,6 @@
 package com.h8.howlong.services;
 
+import com.google.inject.Inject;
 import com.h8.howlong.domain.TimesheetContext;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.repositories.TimesheetContextRepository;
@@ -20,6 +21,7 @@ public class TimesheetContextService {
 
     private Map<LocalDate, WorkDay> timesheets;
 
+    @Inject
     public TimesheetContextService(TimesheetContextRepository repository) {
         this.repository = repository;
         this.context = repository.readContent()

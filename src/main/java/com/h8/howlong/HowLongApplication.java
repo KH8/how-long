@@ -1,13 +1,17 @@
 package com.h8.howlong;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
 import com.h8.howlong.printers.PrintingService;
+import com.h8.howlong.printers.PrintingServiceFactory;
 
 public class HowLongApplication {
 
     private static final HowLongApplicationContext applicationContext;
 
     static {
-        applicationContext = new HowLongApplicationContext();
+        Injector injector = Guice.createInjector();
+        applicationContext = injector.getInstance(HowLongApplicationContext.class);
     }
 
     public static void main(String[] args) {
@@ -18,14 +22,13 @@ public class HowLongApplication {
     }
 
     private static PrintingService resolvePrinter(ArgumentResolver arguments) {
+        PrintingServiceFactory factory = applicationContext.getPrintingServiceFactory();
         if (arguments.calendarMode()) {
-            return applicationContext.getPrintingServiceFactory()
-                    .getCalendarPrinter();
+            return factory.getCalendarPrinter();
         } else if (arguments.listMode()) {
-            return applicationContext.getPrintingServiceFactory()
-                    .getListPrinter();
+            return factory.getListPrinter();
         } else {
-            return applicationContext.getPrintingServiceFactory().getDefaultPrinter();
+            return factory.getDefaultPrinter();
         }
     }
 
