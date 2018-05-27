@@ -1,5 +1,7 @@
 package com.h8.howlong;
 
+import com.h8.howlong.printers.PrintingService;
+
 public class HowLongApplication {
 
     private static final HowLongApplicationContext applicationContext;
@@ -11,18 +13,20 @@ public class HowLongApplication {
     public static void main(String[] args) {
         applicationContext.getTimesheetService().updateWorkDay();
         ArgumentResolver arguments = new ArgumentResolver(args);
-        String response;
+        PrintingService service = resolvePrinter(arguments);
+        System.out.print(service.print(arguments.calendarMonth()));
+    }
+
+    private static PrintingService resolvePrinter(ArgumentResolver arguments) {
         if (arguments.calendarMode()) {
-            response = applicationContext.getPrintingServiceFactory()
-                    .getCalendarPrinter().print(arguments.calendarMonth());
+            return applicationContext.getPrintingServiceFactory()
+                    .getCalendarPrinter();
         } else if (arguments.listMode()) {
-            response = applicationContext.getPrintingServiceFactory()
-                    .getListPrinter().print(arguments.calendarMonth());
+            return applicationContext.getPrintingServiceFactory()
+                    .getListPrinter();
         } else {
-            response = applicationContext.getPrintingServiceFactory()
-                    .getDefaultPrinter().print(arguments.calendarMonth());
+            return applicationContext.getPrintingServiceFactory().getDefaultPrinter();
         }
-        System.out.print(response);
     }
 
 }
