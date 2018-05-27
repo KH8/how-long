@@ -20,8 +20,9 @@ public class ListPrintingService implements PrintingService {
 
     @Override
     public String print(int month) {
-        return LS + buildTable(contextService.getTimesheetForMonth(month)).serialize() +
-                LS + LS + "Total: " + DurationUtils.format(contextService.getTotalWorkingTime(month)) +
+        return "" +
+                LS + buildTable(contextService.getTimesheetForMonth(month)).serialize() + LS +
+                LS + "Total: " + DurationUtils.format(contextService.getTotalWorkingTime(month)) +
                 LS + "Average: " + DurationUtils.format(contextService.getAverageWorkingTime(month));
     }
 
