@@ -8,13 +8,13 @@ import java.util.regex.Pattern;
 
 public class ConfigurationProvider {
 
-    private final static String PROPERTIES_FILE_NAME = "com/h8/howlong/howlong.properties";
+    private final static String PROPERTIES_FILE_NAME = "howlong.properties";
 
     private final static String PLACEHOLDER_REGEX = "\\{(.*?)}";
 
     private final Properties properties;
 
-    public ConfigurationProvider() {
+    ConfigurationProvider() {
         try {
             this.properties = loadProperties();
         } catch (IOException e) {
