@@ -13,6 +13,8 @@ import java.util.List;
 
 public class CalendarPrintingService implements PrintingService {
 
+    private final static Integer MINIMAL_CALENDAR_CELL_WIDTH = 9;
+
     private final TimesheetContextService contextService;
 
     CalendarPrintingService(TimesheetContextService contextService) {
@@ -32,7 +34,7 @@ public class CalendarPrintingService implements PrintingService {
         addHeaderRow(builder);
         addWorkdays(builder, timesheet.iterator());
         Table table = builder.build();
-        table.setMinimumColumnWidth(10);
+        table.setMinimumColumnWidth(MINIMAL_CALENDAR_CELL_WIDTH);
         return table;
     }
 
@@ -73,7 +75,7 @@ public class CalendarPrintingService implements PrintingService {
     }
 
     private String printWorkDay(WorkDay workDay) {
-        return String.format(" #%02d %s ",
+        return String.format("#%02d %s",
                 workDay.getStart().getDayOfMonth(),
                 DurationUtils.format(getElapsedTime(workDay)));
     }

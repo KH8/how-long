@@ -10,7 +10,7 @@ public class HowLongApplication {
     private static final HowLongApplicationContext applicationContext;
 
     static {
-        Injector injector = Guice.createInjector();
+        Injector injector = Guice.createInjector(new HowLongModule());
         applicationContext = injector.getInstance(HowLongApplicationContext.class);
     }
 
