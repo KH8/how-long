@@ -6,30 +6,20 @@ import com.h8.howlong.utils.DurationUtils;
 import net.steppschuh.markdowngenerator.table.Table;
 
 import java.time.DayOfWeek;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class CalendarPrintingService implements PrintingService {
+class CalendarPrintingService extends SummaryPrintingService {
 
     private final static Integer MINIMAL_CALENDAR_CELL_WIDTH = 9;
 
-    private final TimesheetContextService contextService;
-
     CalendarPrintingService(TimesheetContextService contextService) {
-        this.contextService = contextService;
+        super(contextService);
     }
 
     @Override
-    public String print(int month) {
-        return "" +
-                LS + buildTable(contextService.getTimesheetForMonth(month)).serialize() + LS +
-                LS + "Total: " + DurationUtils.format(contextService.getTotalWorkingTime(month)) +
-                LS + "Average: " + DurationUtils.format(contextService.getAverageWorkingTime(month));
-    }
-
-    private Table buildTable(List<WorkDay> timesheet) {
+    Table buildSummary(List<WorkDay> timesheet) {
         Table.Builder builder = new Table.Builder();
         addHeaderRow(builder);
         addWorkdays(builder, timesheet.iterator());
@@ -78,12 +68,6 @@ public class CalendarPrintingService implements PrintingService {
         return String.format("#%02d %s",
                 workDay.getStart().getDayOfMonth(),
                 DurationUtils.format(getElapsedTime(workDay)));
-    }
-
-    private Duration getElapsedTime(WorkDay wd) {
-        return Duration.between(
-                wd.getStart(),
-                wd.getEnd());
     }
 
 }
