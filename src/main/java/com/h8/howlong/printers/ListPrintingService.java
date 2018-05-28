@@ -6,6 +6,7 @@ import com.h8.howlong.utils.DurationUtils;
 import net.steppschuh.markdowngenerator.table.Table;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -28,7 +29,7 @@ public class ListPrintingService implements PrintingService {
 
     private Table buildTable(List<WorkDay> timesheet) {
         Table.Builder builder = new Table.Builder()
-                .addRow("#day", "start", "end", "total");
+                .addRow("DAY", "START", "END", "TOTAL");
         addWorkdays(builder, timesheet);
         return builder.build();
     }
@@ -38,15 +39,18 @@ public class ListPrintingService implements PrintingService {
     }
 
     private void addWorkdays(Table.Builder builder, WorkDay workDay) {
-        Duration d = Duration.between(
-                workDay.getStart().toLocalTime(),
-                workDay.getEnd().toLocalTime());
-        int dayOfMonth = workDay.getStart().getDayOfMonth();
-        int month = workDay.getStart().getMonthValue();
-        builder.addRow(dayOfMonth + "." + month,
-                printLocalTime(workDay.getStart().toLocalTime()),
-                printLocalTime(workDay.getEnd().toLocalTime()),
-                DurationUtils.format(d));
+        LocalDateTime s = workDay.getStart();
+        LocalDateTime e = workDay.getEnd();
+        builder.addRow(s.getDayOfMonth() + "/" + s.getMonthValue() + "/" + s.getDayOfWeek(),
+                printLocalTime(s.toLocalTime()),
+                printLocalTime(e.toLocalTime()),
+                DurationUtils.format(getElapsedTime(workDay)));
+    }
+
+    private Duration getElapsedTime(WorkDay wd) {
+        return Duration.between(
+                wd.getStart(),
+                wd.getEnd());
     }
 
     private String printLocalTime(LocalTime localTime) {
