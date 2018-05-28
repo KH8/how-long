@@ -17,10 +17,11 @@ public class DefaultPrintingService implements PrintingService {
     @Override
     public String print(int month) {
         WorkDay wd = contextService.getWorkDayOfToday();
-        return ("Today is " + wd.getStart().toLocalDate()) +
+        return "" +
+                LS + "Today is " + wd.getStart().toLocalDate() +
                 LS + "- started at: " + wd.getStart().toLocalTime() +
                 LS + "- elapsed time: " + DurationUtils.format(getElapsedTime(wd)) +
-                LS +  "- remaining time: " + DurationUtils.format(getRemainingTime(wd)) +
+                LS + "- remaining time: " + DurationUtils.format(getRemainingTime(wd)) +
                 LS + "Enjoy the day!";
     }
 

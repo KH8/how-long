@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 class ArgumentResolver {
 
-    private String[] args;
+    private final String[] args;
 
     ArgumentResolver(String[] args) {
         this.args = args;

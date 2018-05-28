@@ -1,28 +1,35 @@
 package com.h8.howlong;
 
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import com.h8.howlong.printers.PrintingService;
+import com.h8.howlong.printers.PrintingServiceFactory;
+
 public class HowLongApplication {
 
     private static final HowLongApplicationContext applicationContext;
 
     static {
-        applicationContext = new HowLongApplicationContext();
+        Injector injector = Guice.createInjector();
+        applicationContext = injector.getInstance(HowLongApplicationContext.class);
     }
 
     public static void main(String[] args) {
         applicationContext.getTimesheetService().updateWorkDay();
         ArgumentResolver arguments = new ArgumentResolver(args);
-        String response;
+        PrintingService service = resolvePrinter(arguments);
+        System.out.print(service.print(arguments.calendarMonth()));
+    }
+
+    private static PrintingService resolvePrinter(ArgumentResolver arguments) {
+        PrintingServiceFactory factory = applicationContext.getPrintingServiceFactory();
         if (arguments.calendarMode()) {
-            response = applicationContext.getPrintingServiceFactory()
-                    .getCalendarPrinter().print(arguments.calendarMonth());
+            return factory.getCalendarPrinter();
         } else if (arguments.listMode()) {
-            response = applicationContext.getPrintingServiceFactory()
-                    .getListPrinter().print(arguments.calendarMonth());
+            return factory.getListPrinter();
         } else {
-            response = applicationContext.getPrintingServiceFactory()
-                    .getDefaultPrinter().print(arguments.calendarMonth());
+            return factory.getDefaultPrinter();
         }
-        System.out.print(response);
     }
 
 }
