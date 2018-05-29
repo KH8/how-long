@@ -1,5 +1,6 @@
 package com.h8.howlong.domain;
 
+import com.google.inject.Singleton;
 import lombok.Data;
 import lombok.Singular;
 
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Data
+@Singleton
 public class TimesheetContext implements Serializable {
 
     @Singular

@@ -1,10 +1,12 @@
 package com.h8.howlong.repositories;
 
+import com.google.inject.Singleton;
 import com.h8.howlong.configuration.ConfigurationProvider;
 import com.h8.howlong.domain.TimesheetContext;
 
 import javax.inject.Inject;
 
+@Singleton
 public class TimesheetContextRepository extends AbstractFileBasedRepository<TimesheetContext> {
 
     @Inject

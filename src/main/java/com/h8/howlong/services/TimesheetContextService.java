@@ -1,6 +1,7 @@
 package com.h8.howlong.services;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.h8.howlong.domain.TimesheetContext;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.repositories.TimesheetContextRepository;
@@ -13,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Singleton
 public class TimesheetContextService {
 
     private TimesheetContextRepository repository;

@@ -1,11 +1,13 @@
 package com.h8.howlong;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.h8.howlong.printers.PrintingServiceFactory;
 import com.h8.howlong.services.TimesheetService;
 import lombok.Getter;
 
 @Getter
+@Singleton
 class HowLongApplicationContext {
 
     private final TimesheetService timesheetService;

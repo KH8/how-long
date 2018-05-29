@@ -1,8 +1,10 @@
 package com.h8.howlong.printers;
 
 import com.google.inject.Inject;
+import com.google.inject.Singleton;
 import com.h8.howlong.services.TimesheetContextService;
 
+@Singleton
 public class PrintingServiceFactory {
 
     private final TimesheetContextService contextService;

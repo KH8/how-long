@@ -1,11 +1,14 @@
 package com.h8.howlong.configuration;
 
+import com.google.inject.Singleton;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Singleton
 public class ConfigurationProvider {
 
     private final static String PROPERTIES_FILE_NAME = "howlong.properties";
