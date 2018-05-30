@@ -6,7 +6,6 @@ import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
 
 import java.time.*;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public abstract class SummaryPrintingService implements PrintingService {
@@ -33,10 +32,6 @@ public abstract class SummaryPrintingService implements PrintingService {
         return Duration.between(
                 wd.getStart(),
                 wd.getEnd());
-    }
-
-    String printLocalTime(LocalTime localTime) {
-        return DateTimeFormatter.ofPattern("hh:mm:ss").format(localTime);
     }
 
 }

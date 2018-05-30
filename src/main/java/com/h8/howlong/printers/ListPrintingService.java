@@ -6,12 +6,15 @@ import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
 
 import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
 class ListPrintingService extends SummaryPrintingService {
 
     private final static Integer LIST_CELL_WIDTH = 18;
+
+    private final static DateTimeFormatter LOCAL_TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm:ss");
 
     ListPrintingService(TimesheetContextService contextService) {
         super(contextService);
@@ -35,8 +38,8 @@ class ListPrintingService extends SummaryPrintingService {
         LocalDateTime e = workDay.getEnd();
         t.addRow(Arrays.asList(
                 String.format("#%s | <c%s>", s.getDayOfMonth(), s.getDayOfWeek()),
-                String.format("<y%s>", printLocalTime(s.toLocalTime())),
-                String.format("<y%s>", printLocalTime(e.toLocalTime())),
+                String.format("<y%s>", s.toLocalTime().format(LOCAL_TIME_FORMATTER)),
+                String.format("<y%s>", e.toLocalTime().format(LOCAL_TIME_FORMATTER)),
                 String.format("<y%s>", DurationUtils.format(getElapsedTime(workDay)))));
     }
 
