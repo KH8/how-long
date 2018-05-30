@@ -21,12 +21,12 @@ class CalendarPrintingService extends SummaryPrintingService {
     }
 
     @Override
-    PrintTable buildSummary(List<WorkDay> timesheet) {
+    String buildSummary(List<WorkDay> timesheet) {
         PrintTable t = PrintTable.builder()
                 .withCellWidth(CALENDAR_CELL_WIDTH);
         addHeaderRow(t);
         addWorkdays(t, timesheet.iterator());
-        return t;
+        return t.serialize();
     }
 
     private void addHeaderRow(PrintTable t) {

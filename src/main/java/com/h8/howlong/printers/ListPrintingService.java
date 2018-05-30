@@ -18,12 +18,12 @@ class ListPrintingService extends SummaryPrintingService {
     }
 
     @Override
-    PrintTable buildSummary(List<WorkDay> timesheet) {
+    String buildSummary(List<WorkDay> timesheet) {
         PrintTable t = PrintTable.builder()
                 .withCellWidth(LIST_CELL_WIDTH);
         t.addRow(Arrays.asList("<cDAY>", "<cSTART>", "<cEND>", "<cTOTAL>"));
         addWorkdays(t, timesheet);
-        return t;
+        return t.serialize();
     }
 
     private void addWorkdays(PrintTable t, List<WorkDay> timesheet) {
