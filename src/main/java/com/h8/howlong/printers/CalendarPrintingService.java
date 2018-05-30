@@ -12,7 +12,7 @@ import java.util.List;
 
 class CalendarPrintingService extends SummaryPrintingService {
 
-    private final static Integer MINIMAL_CALENDAR_CELL_WIDTH = 9;
+    private final static Integer MINIMAL_CALENDAR_CELL_WIDTH = 12;
 
     CalendarPrintingService(TimesheetContextService contextService) {
         super(contextService);
@@ -65,7 +65,7 @@ class CalendarPrintingService extends SummaryPrintingService {
     }
 
     private String printWorkDay(WorkDay workDay) {
-        return String.format("#%02d %s",
+        return String.format("#%02d - %s",
                 workDay.getStart().getDayOfMonth(),
                 DurationUtils.format(getElapsedTime(workDay)));
     }
