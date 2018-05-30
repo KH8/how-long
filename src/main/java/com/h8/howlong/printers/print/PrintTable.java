@@ -31,10 +31,21 @@ public class PrintTable {
     }
 
     public String serialize() {
+        if (!cells.isEmpty()) {
+            applyHeaderSeparator();
+        }
         return cells.stream()
                 .map(this::serializeRow)
                 .map(r -> String.format("| %s |", r))
                 .collect(Collectors.joining(System.lineSeparator()));
+    }
+
+    private void applyHeaderSeparator() {
+        cells.add(1, cells.get(0)
+                .stream()
+                .map(c -> String.format("<c%s>",
+                        StringUtils.rightPad("", cellWidth - 3, "-")))
+                .collect(Collectors.toList()));
     }
 
     private String serializeRow(List<String> row) {
