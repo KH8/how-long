@@ -1,9 +1,10 @@
 package com.h8.howlong.printers;
 
 import com.h8.howlong.domain.WorkDay;
+import com.h8.howlong.printers.print.PrintBuilder;
+import com.h8.howlong.printers.print.PrintTable;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
-import net.steppschuh.markdowngenerator.table.Table;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -19,15 +20,15 @@ public abstract class SummaryPrintingService implements PrintingService {
 
     @Override
     public String print(int month) {
-        return PrinterResponseBuilder.builder()
-                .ln(String.format("%s %s", Month.of(month), LocalDate.now().getYear())).ln()
+        return PrintBuilder.builder()
+                .ln(String.format("<c%s %s>", Month.of(month), LocalDate.now().getYear())).ln()
                 .ln(buildSummary(contextService.getTimesheetForMonth(month)).serialize()).ln()
-                .ln(String.format("Total: %s", DurationUtils.format(contextService.getTotalWorkingTime(month))))
-                .ln(String.format("Average: %s", DurationUtils.format(contextService.getAverageWorkingTime(month))))
+                .ln(String.format("Total: <y%s>", DurationUtils.format(contextService.getTotalWorkingTime(month))))
+                .ln(String.format("Average: <y%s>", DurationUtils.format(contextService.getAverageWorkingTime(month))))
                 .build();
     }
 
-    abstract Table buildSummary(List<WorkDay> timesheet);
+    abstract PrintTable buildSummary(List<WorkDay> timesheet);
 
     Duration getElapsedTime(WorkDay wd) {
         return Duration.between(

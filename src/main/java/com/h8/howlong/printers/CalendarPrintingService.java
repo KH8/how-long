@@ -1,44 +1,48 @@
 package com.h8.howlong.printers;
 
 import com.h8.howlong.domain.WorkDay;
+import com.h8.howlong.printers.print.PrintTable;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
-import net.steppschuh.markdowngenerator.table.Table;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 class CalendarPrintingService extends SummaryPrintingService {
 
-    private final static Integer MINIMAL_CALENDAR_CELL_WIDTH = 12;
+    private final static Integer CALENDAR_CELL_WIDTH = 14;
 
     CalendarPrintingService(TimesheetContextService contextService) {
         super(contextService);
     }
 
     @Override
-    Table buildSummary(List<WorkDay> timesheet) {
-        Table.Builder builder = new Table.Builder();
-        addHeaderRow(builder);
-        addWorkdays(builder, timesheet.iterator());
-        Table table = builder.build();
-        table.setMinimumColumnWidth(MINIMAL_CALENDAR_CELL_WIDTH);
-        return table;
+    PrintTable buildSummary(List<WorkDay> timesheet) {
+        PrintTable t = PrintTable.builder()
+                .withCellWidth(CALENDAR_CELL_WIDTH);
+        addHeaderRow(t);
+        addWorkdays(t, timesheet.iterator());
+        return t;
     }
 
-    private void addHeaderRow(Table.Builder builder) {
-        builder.addRow((Object[]) DayOfWeek.values());
+    private void addHeaderRow(PrintTable t) {
+        List<String> headers = Arrays.stream(DayOfWeek.values())
+                .map(d -> String.format("<c%s>", d))
+                .collect(Collectors.toList());
+        t.addRow(headers);
     }
 
-    private void addWorkdays(Table.Builder builder, Iterator<WorkDay> timesheet) {
+    private void addWorkdays(PrintTable t, Iterator<WorkDay> timesheet) {
         if (timesheet.hasNext()) {
-            addWorkdays(builder, timesheet, timesheet.next());
+            addWorkdays(t, timesheet, timesheet.next());
         }
     }
 
-    private void addWorkdays(Table.Builder builder, Iterator<WorkDay> timesheet, WorkDay next) {
+    private void addWorkdays(PrintTable t, Iterator<WorkDay> timesheet, WorkDay next) {
         WorkDay c = next;
         boolean repeat = false;
 
@@ -54,18 +58,18 @@ class CalendarPrintingService extends SummaryPrintingService {
                     }
                 }
             } else {
-                week.add("");
+                week.add("<c >");
             }
         }
 
-        builder.addRow(week.toArray());
+        t.addRow(week);
         if (repeat) {
-            addWorkdays(builder, timesheet, c);
+            addWorkdays(t, timesheet, c);
         }
     }
 
     private String printWorkDay(WorkDay workDay) {
-        return String.format("#%02d - %s",
+        return String.format("#%02d - <y%s>",
                 workDay.getStart().getDayOfMonth(),
                 DurationUtils.format(getElapsedTime(workDay)));
     }
