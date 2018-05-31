@@ -1,4 +1,4 @@
-package com.h8.howlong;
+package com.h8.howlong.configuration;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
@@ -8,7 +8,7 @@ import lombok.Getter;
 
 @Getter
 @Singleton
-class HowLongApplicationContext {
+public class HowLongApplicationContext {
 
     private final TimesheetService timesheetService;
 
