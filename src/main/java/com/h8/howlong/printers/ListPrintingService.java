@@ -37,7 +37,7 @@ class ListPrintingService extends SummaryPrintingService {
         LocalDateTime s = workDay.getStart();
         LocalDateTime e = workDay.getEnd();
         t.addRow(Arrays.asList(
-                String.format("#%s | <c%s>", s.getDayOfMonth(), s.getDayOfWeek()),
+                String.format("#%2s | <c%s>", s.getDayOfMonth(), s.getDayOfWeek()),
                 String.format("<y%s>", s.toLocalTime().format(LOCAL_TIME_FORMATTER)),
                 String.format("<y%s>", e.toLocalTime().format(LOCAL_TIME_FORMATTER)),
                 String.format("<y%s>", DurationUtils.format(getElapsedTime(workDay)))));

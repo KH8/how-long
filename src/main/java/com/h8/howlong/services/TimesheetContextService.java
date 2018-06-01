@@ -67,7 +67,7 @@ public class TimesheetContextService {
         return timesheets.values()
                 .stream()
                 .filter(d -> today.getYear() == d.getStart().getYear())
-                .filter(d -> today.getMonthValue() == month)
+                .filter(d -> d.getStart().getMonthValue() == month)
                 .sorted(Comparator.comparing(WorkDay::getStart))
                 .collect(Collectors.toList());
     }
