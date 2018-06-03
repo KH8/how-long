@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 class CalendarPrintingService extends SummaryPrintingService {
 
-    private final static Integer CALENDAR_CELL_WIDTH = 14;
+    private final static Integer CALENDAR_CELL_WIDTH = 12;
 
     CalendarPrintingService(TimesheetContextService contextService) {
         super(contextService);
@@ -46,11 +46,10 @@ class CalendarPrintingService extends SummaryPrintingService {
         WorkDay c = next;
         boolean repeat = false;
 
-        List<String> week = new ArrayList<>();
+        List<WorkDay> week = new ArrayList<>();
         for (DayOfWeek d : DayOfWeek.values()) {
             if (d.equals(c.getStart().getDayOfWeek())) {
-                String day = printWorkDay(c);
-                week.add(day);
+                week.add(c);
                 if (timesheet.hasNext()) {
                     c = timesheet.next();
                     if (d.compareTo(c.getStart().getDayOfWeek()) > 0) {
@@ -58,20 +57,30 @@ class CalendarPrintingService extends SummaryPrintingService {
                     }
                 }
             } else {
-                week.add("<c >");
+                week.add(null);
             }
         }
 
-        t.addRow(week);
+        addWorkdays(t, week);
         if (repeat) {
             addWorkdays(t, timesheet, c);
         }
     }
 
-    private String printWorkDay(WorkDay workDay) {
-        return String.format("#%02d - <y%s>",
-                workDay.getStart().getDayOfMonth(),
-                DurationUtils.format(getElapsedTime(workDay)));
+    private void addWorkdays(PrintTable t, List<WorkDay> week) {
+        List<String> row = week
+                .stream()
+                .map(this::printWorkDay)
+                .collect(Collectors.toList());
+        t.addRow(row);
+    }
+
+    private String printWorkDay(WorkDay d) {
+        return d != null ?
+                String.format("#%2d <y%s>",
+                        d.getStart().getDayOfMonth(),
+                        DurationUtils.format(getElapsedTime(d))) :
+                "<c >";
     }
 
 }
