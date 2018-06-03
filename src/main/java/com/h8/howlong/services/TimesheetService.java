@@ -17,13 +17,9 @@ public class TimesheetService {
     }
 
     public WorkDay updateWorkDay() {
-        WorkDay wd = getWorkDayOfToday();
+        WorkDay wd = service.getWorkDayOfToday();
         wd.setEnd(LocalDateTime.now());
         return service.updateWorkDay(wd);
-    }
-
-    private WorkDay getWorkDayOfToday() {
-        return service.getWorkDayOfToday();
     }
 
 }
