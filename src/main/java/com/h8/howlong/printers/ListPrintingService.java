@@ -14,7 +14,7 @@ class ListPrintingService extends SummaryPrintingService {
 
     private final static Integer LIST_CELL_WIDTH = 18;
 
-    private final static DateTimeFormatter LOCAL_TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm:ss");
+    private final static DateTimeFormatter LOCAL_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
     ListPrintingService(TimesheetContextService contextService) {
         super(contextService);

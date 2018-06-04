@@ -3,17 +3,22 @@ package com.h8.howlong.printers;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.printers.print.PrintBuilder;
 import com.h8.howlong.services.TimesheetContextService;
+import com.h8.howlong.services.WorkDayComputationService;
 import com.h8.howlong.utils.DurationUtils;
 
-import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 public class DefaultPrintingService implements PrintingService {
 
     private final TimesheetContextService contextService;
 
-    DefaultPrintingService(TimesheetContextService contextService) {
+    private final WorkDayComputationService computationService;
+
+    DefaultPrintingService(
+            TimesheetContextService contextService,
+            WorkDayComputationService computationService) {
         this.contextService = contextService;
+        this.computationService = computationService;
     }
 
     @Override
@@ -22,21 +27,15 @@ public class DefaultPrintingService implements PrintingService {
         return PrintBuilder.builder()
                 .ln(String.format("Today is <c%s>", wd.getStart().toLocalDate()))
                 .ln(String.format("- started at: <y%s>", wd.getStart().toLocalTime()
-                        .format(DateTimeFormatter.ofPattern("hh:mm:ss"))))
-                .ln(String.format("- elapsed time: <y%s>", DurationUtils.format(getElapsedTime(wd))))
-                .ln(String.format("- remaining time: <y%s>", DurationUtils.format(getRemainingTime(wd))))
+                        .format(DateTimeFormatter.ofPattern("HH:mm:ss"))))
+                .ln(String.format("- end suggested at: <y%s>", computationService.getSuggestedEndTime()
+                        .format(DateTimeFormatter.ofPattern("HH:mm:ss"))))
+                .ln(String.format("- elapsed time: <y%s>",
+                        DurationUtils.format(computationService.getElapsedTime())))
+                .ln(String.format("- remaining time: <y%s>",
+                        DurationUtils.format(computationService.getRemainingTime())))
                 .ln("<cEnjoy the day!>")
                 .build();
-    }
-
-    private Duration getElapsedTime(WorkDay wd) {
-        return Duration.between(
-                wd.getStart(),
-                wd.getEnd());
-    }
-
-    private Duration getRemainingTime(WorkDay wd) {
-        return Duration.ofHours(8).minus(getElapsedTime(wd));
     }
 
 }
