@@ -30,8 +30,7 @@ public class WorkDayComputationService {
     }
 
     public Duration getRemainingTime() {
-        WorkDay wd = contextService.getWorkDayOfToday();
-        return Duration.ofSeconds(getWorkDayDurationSeconds()).minus(getElapsedTime(wd));
+        return Duration.between(LocalDateTime.now(), getSuggestedEndTime());
     }
 
     public LocalDateTime getSuggestedEndTime() {

@@ -6,6 +6,7 @@ import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.services.WorkDayComputationService;
 import com.h8.howlong.utils.DurationUtils;
 
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class DefaultPrintingService implements PrintingService {
@@ -25,7 +26,8 @@ public class DefaultPrintingService implements PrintingService {
     public String print(int month) {
         WorkDay wd = contextService.getWorkDayOfToday();
         return PrintBuilder.builder()
-                .ln(String.format("Today is <c%s>", wd.getStart().toLocalDate()))
+                .ln(String.format("Today is <c%s>", LocalDateTime.now()
+                        .format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"))))
                 .ln(String.format("- started at: <y%s>", wd.getStart().toLocalTime()
                         .format(DateTimeFormatter.ofPattern("HH:mm:ss"))))
                 .ln(String.format("- end suggested at: <y%s>", computationService.getSuggestedEndTime()
