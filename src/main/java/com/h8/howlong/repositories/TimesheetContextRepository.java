@@ -9,9 +9,11 @@ import javax.inject.Inject;
 @Singleton
 public class TimesheetContextRepository extends AbstractFileBasedRepository<TimesheetContext> {
 
+    private static final String DB_FILE_NAME_PROP = "db.file.name";
+
     @Inject
     public TimesheetContextRepository(ConfigurationProvider configurationProvider) {
-        super(configurationProvider.getProperty("db.file.name"));
+        super(configurationProvider.getProperty(DB_FILE_NAME_PROP));
     }
 
     @Override
