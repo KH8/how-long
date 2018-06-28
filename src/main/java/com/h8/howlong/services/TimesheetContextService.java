@@ -48,6 +48,10 @@ public class TimesheetContextService {
         return wd;
     }
 
+    public Integer getTotalWorkingDayCount(int month) {
+        return getTimesheetForMonth(month).size();
+    }
+
     public Duration getTotalWorkingTime(int month) {
         return getTimesheetForMonth(month)
                 .stream()

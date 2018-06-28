@@ -5,7 +5,9 @@ import com.h8.howlong.printers.print.PrintBuilder;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 public abstract class SummaryPrintingService implements PrintingService {
@@ -21,8 +23,11 @@ public abstract class SummaryPrintingService implements PrintingService {
         return PrintBuilder.builder()
                 .ln(String.format("<c%s %s>", Month.of(month), LocalDate.now().getYear())).ln()
                 .ln(buildSummary(contextService.getTimesheetForMonth(month))).ln()
-                .ln(String.format("Total: <y%s>", DurationUtils.format(contextService.getTotalWorkingTime(month))))
-                .ln(String.format("Average: <y%s>", DurationUtils.format(contextService.getAverageWorkingTime(month))))
+                .ln(String.format("Total: <y%s> (days: <y%s>)",
+                        DurationUtils.format(contextService.getTotalWorkingTime(month)),
+                        contextService.getTotalWorkingDayCount(month)))
+                .ln(String.format("Average: <y%s>",
+                        DurationUtils.format(contextService.getAverageWorkingTime(month))))
                 .build();
     }
 
