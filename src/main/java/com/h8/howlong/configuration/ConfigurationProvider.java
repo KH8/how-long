@@ -11,7 +11,7 @@ import java.util.regex.Pattern;
 @Singleton
 public class ConfigurationProvider {
 
-    private final static String PROPERTIES_FILE_NAME = "howlong.properties";
+    private final static String PROPERTIES_FILE_NAME = "how-long.properties";
 
     private final static String PLACEHOLDER_REGEX = "\\{(.*?)}";
 

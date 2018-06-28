@@ -12,6 +12,8 @@ import java.util.List;
 @Singleton
 public class WorkDayComputationService {
 
+    private static final String WORKDAY_DURATION_PROP = "workDay.duration";
+
     private final ConfigurationProvider configurationProvider;
 
     private final TimesheetContextService contextService;
@@ -56,7 +58,7 @@ public class WorkDayComputationService {
     }
 
     private Integer getWorkDayDurationSeconds() {
-        Double d = Double.parseDouble(configurationProvider.getProperty("workDay.duration")) * 3600;
+        Double d = Double.parseDouble(configurationProvider.getProperty(WORKDAY_DURATION_PROP)) * 3600;
         return d.intValue();
     }
 
