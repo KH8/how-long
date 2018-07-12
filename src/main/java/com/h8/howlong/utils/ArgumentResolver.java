@@ -12,6 +12,10 @@ public class ArgumentResolver {
         this.args = args;
     }
 
+    public Boolean quietMode() {
+        return args.length > 0 && HowLongApplicationCommands.QUIET.equals(args[0]);
+    }
+
     public Boolean calendarMode() {
         return args.length > 0 && HowLongApplicationCommands.CALENDAR.equals(args[0]);
     }

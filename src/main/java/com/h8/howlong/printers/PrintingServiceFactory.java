@@ -20,6 +20,10 @@ public class PrintingServiceFactory {
         this.computationService = computationService;
     }
 
+    public PrintingService getQuietPrinter() {
+        return new QuietPrintingService(contextService, computationService);
+    }
+
     public PrintingService getDefaultPrinter() {
         return new DefaultPrintingService(contextService, computationService);
     }

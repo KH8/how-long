@@ -25,7 +25,9 @@ public class HowLongApplication {
 
     private static PrintingService resolvePrinter(ArgumentResolver arguments) {
         PrintingServiceFactory factory = applicationContext.getPrintingServiceFactory();
-        if (arguments.calendarMode()) {
+        if (arguments.quietMode()) {
+            return factory.getQuietPrinter();
+        } else if (arguments.calendarMode()) {
             return factory.getCalendarPrinter();
         } else if (arguments.listMode()) {
             return factory.getListPrinter();
