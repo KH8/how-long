@@ -1,7 +1,11 @@
-package com.h8.howlong.app.printers;
+package com.h8.howlong.app.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.h8.howlong.app.services.impl.CalendarPrintingService;
+import com.h8.howlong.app.services.impl.DefaultPrintingService;
+import com.h8.howlong.app.services.impl.ListPrintingService;
+import com.h8.howlong.app.services.impl.QuietPrintingService;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.services.WorkDayComputationService;
 

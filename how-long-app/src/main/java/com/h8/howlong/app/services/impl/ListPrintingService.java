@@ -1,22 +1,22 @@
-package com.h8.howlong.app.printers;
+package com.h8.howlong.app.services.impl;
 
-import com.h8.howlong.app.printers.print.PrintTable;
 import com.h8.howlong.app.utils.DurationUtils;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
+import com.h8.howlong.utils.print.PrintTable;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
-class ListPrintingService extends SummaryPrintingService {
+public class ListPrintingService extends SummaryPrintingService {
 
     private final static Integer LIST_CELL_WIDTH = 18;
 
     private final static DateTimeFormatter LOCAL_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm:ss");
 
-    ListPrintingService(TimesheetContextService contextService) {
+    public ListPrintingService(TimesheetContextService contextService) {
         super(contextService);
     }
 

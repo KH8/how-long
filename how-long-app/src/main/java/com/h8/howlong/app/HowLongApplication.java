@@ -3,9 +3,10 @@ package com.h8.howlong.app;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.h8.howlong.app.configuration.HowLongApplicationContext;
-import com.h8.howlong.app.printers.PrintingService;
-import com.h8.howlong.app.printers.PrintingServiceFactory;
+import com.h8.howlong.app.services.PrintingService;
+import com.h8.howlong.app.services.PrintingServiceFactory;
 import com.h8.howlong.app.utils.ArgumentResolver;
+import com.h8.howlong.utils.Logger;
 
 public class HowLongApplication {
 
@@ -20,7 +21,7 @@ public class HowLongApplication {
         applicationContext.getTimesheetService().updateWorkDay();
         ArgumentResolver arguments = new ArgumentResolver(args);
         PrintingService service = resolvePrinter(arguments);
-        System.out.print(service.print(arguments.calendarMonth()));
+        Logger.log(service.print(arguments.calendarMonth()));
     }
 
     private static PrintingService resolvePrinter(ArgumentResolver arguments) {

@@ -1,6 +1,7 @@
-package com.h8.howlong.app.printers;
+package com.h8.howlong.app.services.impl;
 
-import com.h8.howlong.app.printers.print.PrintBuilder;
+import com.h8.howlong.app.services.PrintingService;
+import com.h8.howlong.utils.print.PrintBuilder;
 import com.h8.howlong.app.utils.DurationUtils;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.services.WorkDayComputationService;
@@ -14,7 +15,7 @@ public class QuietPrintingService implements PrintingService {
 
     private final WorkDayComputationService computationService;
 
-    QuietPrintingService(
+    public QuietPrintingService(
             TimesheetContextService contextService,
             WorkDayComputationService computationService) {
         this.contextService = contextService;

@@ -1,9 +1,9 @@
-package com.h8.howlong.app.printers;
+package com.h8.howlong.app.services.impl;
 
-import com.h8.howlong.app.printers.print.PrintTable;
 import com.h8.howlong.app.utils.DurationUtils;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
+import com.h8.howlong.utils.print.PrintTable;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;
@@ -12,11 +12,11 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class CalendarPrintingService extends SummaryPrintingService {
+public class CalendarPrintingService extends SummaryPrintingService {
 
     private final static Integer CALENDAR_CELL_WIDTH = 12;
 
-    CalendarPrintingService(TimesheetContextService contextService) {
+    public CalendarPrintingService(TimesheetContextService contextService) {
         super(contextService);
     }
 
