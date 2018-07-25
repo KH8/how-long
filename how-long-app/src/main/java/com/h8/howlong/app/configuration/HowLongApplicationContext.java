@@ -1,8 +1,8 @@
-package com.h8.howlong.configuration;
+package com.h8.howlong.app.configuration;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.h8.howlong.printers.PrintingServiceFactory;
+import com.h8.howlong.app.printers.PrintingServiceFactory;
 import com.h8.howlong.services.TimesheetService;
 import lombok.Getter;
 

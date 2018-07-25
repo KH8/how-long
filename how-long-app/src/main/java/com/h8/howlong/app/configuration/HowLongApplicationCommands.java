@@ -1,4 +1,4 @@
-package com.h8.howlong.configuration;
+package com.h8.howlong.app.configuration;
 
 public interface HowLongApplicationCommands {
     String QUIET = "q";

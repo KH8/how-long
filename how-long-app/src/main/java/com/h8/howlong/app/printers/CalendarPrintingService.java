@@ -1,9 +1,9 @@
-package com.h8.howlong.printers;
+package com.h8.howlong.app.printers;
 
+import com.h8.howlong.app.printers.print.PrintTable;
+import com.h8.howlong.app.utils.DurationUtils;
 import com.h8.howlong.domain.WorkDay;
-import com.h8.howlong.printers.print.PrintTable;
 import com.h8.howlong.services.TimesheetContextService;
-import com.h8.howlong.utils.DurationUtils;
 
 import java.time.DayOfWeek;
 import java.util.ArrayList;

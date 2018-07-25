@@ -1,6 +1,6 @@
-package com.h8.howlong.utils;
+package com.h8.howlong.app.utils;
 
-import com.h8.howlong.configuration.HowLongApplicationCommands;
+import com.h8.howlong.app.configuration.HowLongApplicationCommands;
 
 import java.time.LocalDate;
 

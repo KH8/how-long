@@ -1,4 +1,4 @@
-package com.h8.howlong.printers.print;
+package com.h8.howlong.app.printers.print;
 
 public final class PrintBuilder {
 

@@ -1,10 +1,10 @@
-package com.h8.howlong.printers;
+package com.h8.howlong.app.printers;
 
+import com.h8.howlong.app.printers.print.PrintBuilder;
+import com.h8.howlong.app.utils.DurationUtils;
 import com.h8.howlong.domain.WorkDay;
-import com.h8.howlong.printers.print.PrintBuilder;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.services.WorkDayComputationService;
-import com.h8.howlong.utils.DurationUtils;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

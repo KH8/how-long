@@ -1,4 +1,4 @@
-package com.h8.howlong.printers;
+package com.h8.howlong.app.printers;
 
 public interface PrintingService {
 
