@@ -1,4 +1,4 @@
-package com.h8.howlong.app.utils;
+package com.h8.howlong.utils;
 
 import java.time.Duration;
 

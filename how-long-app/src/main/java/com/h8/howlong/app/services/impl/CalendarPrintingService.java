@@ -1,6 +1,6 @@
 package com.h8.howlong.app.services.impl;
 
-import com.h8.howlong.app.utils.DurationUtils;
+import com.h8.howlong.utils.DurationUtils;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.print.PrintTable;

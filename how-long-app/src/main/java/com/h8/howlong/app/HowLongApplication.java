@@ -18,7 +18,7 @@ public class HowLongApplication {
     }
 
     public static void main(String[] args) {
-        applicationContext.getTimesheetService().updateWorkDay();
+        applicationContext.getTimesheetService().updateWorkDayEndTime();
         ArgumentResolver arguments = new ArgumentResolver(args);
         PrintingService service = resolvePrinter(arguments);
         Logger.log(service.print(arguments.calendarMonth()));

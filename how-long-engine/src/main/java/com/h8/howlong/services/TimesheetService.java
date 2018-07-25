@@ -16,7 +16,7 @@ public class TimesheetService {
         this.service = service;
     }
 
-    public WorkDay updateWorkDay() {
+    public WorkDay updateWorkDayEndTime() {
         WorkDay wd = service.getWorkDayOfToday();
         wd.setEnd(LocalDateTime.now());
         return service.updateWorkDay(wd);

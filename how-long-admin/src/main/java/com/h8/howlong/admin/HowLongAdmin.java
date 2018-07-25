@@ -15,7 +15,7 @@ public class HowLongAdmin {
     }
 
     public static void main(String[] args) {
-        Logger.log("-- how-long Admin --");
+        Logger.log(applicationContext.getListCommand().list(7));
     }
 
 }
