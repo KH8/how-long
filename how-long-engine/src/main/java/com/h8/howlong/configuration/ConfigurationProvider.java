@@ -3,9 +3,7 @@ package com.h8.howlong.configuration;
 import com.google.inject.Singleton;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Properties;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Singleton
@@ -28,25 +26,25 @@ public class ConfigurationProvider {
 
     private Properties loadProperties()
             throws IOException {
-        InputStream stream = Thread.currentThread()
+        var stream = Thread.currentThread()
                 .getContextClassLoader().getResourceAsStream(PROPERTIES_FILE_NAME);
-        Properties properties = new Properties();
+        var properties = new Properties();
         properties.load(stream);
         return properties;
     }
 
     public String getProperty(String key) {
-        String p = properties.getProperty(key);
+        var p = properties.getProperty(key);
         p = replacePlaceholders(p);
         return p;
     }
 
     private String replacePlaceholders(String s) {
-        Pattern pattern = Pattern.compile(PLACEHOLDER_REGEX);
-        Matcher m = pattern.matcher(s);
+        var pattern = Pattern.compile(PLACEHOLDER_REGEX);
+        var m = pattern.matcher(s);
         while (m.find()) {
-            String key = m.group(1);
-            String value = resolveSystemProperty(key);
+            var key = m.group(1);
+            var value = resolveSystemProperty(key);
             s = s.replace("{" + key + "}", value);
         }
         return s;

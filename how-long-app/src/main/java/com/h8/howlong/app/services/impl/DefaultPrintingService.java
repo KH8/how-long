@@ -3,7 +3,6 @@ package com.h8.howlong.app.services.impl;
 import com.h8.howlong.app.services.PrintingService;
 import com.h8.howlong.utils.print.PrintBuilder;
 import com.h8.howlong.utils.DurationUtils;
-import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.services.WorkDayComputationService;
 
@@ -25,7 +24,7 @@ public class DefaultPrintingService implements PrintingService {
 
     @Override
     public String print(int month) {
-        WorkDay wd = contextService.getWorkDayOfToday();
+        var wd = contextService.getWorkDayOfToday();
         return PrintBuilder.builder()
                 .ln(String.format("Today is <c%s>", LocalDateTime.now()
                         .format(DateTimeFormatter.ofPattern("YYYY-MM-dd HH:mm:ss"))))

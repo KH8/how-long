@@ -5,7 +5,6 @@ import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.print.PrintTable;
 
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
@@ -22,7 +21,7 @@ public class ListPrintingService extends SummaryPrintingService {
 
     @Override
     String buildSummary(List<WorkDay> timesheet) {
-        PrintTable t = PrintTable.builder()
+        var t = PrintTable.builder()
                 .withCellWidth(LIST_CELL_WIDTH);
         t.addRow(Arrays.asList("<cDAY>", "<cSTART>", "<cEND>", "<cTOTAL>"));
         addWorkdays(t, timesheet);
@@ -34,8 +33,8 @@ public class ListPrintingService extends SummaryPrintingService {
     }
 
     private void addWorkdays(PrintTable t, WorkDay workDay) {
-        LocalDateTime s = workDay.getStart();
-        LocalDateTime e = workDay.getEnd();
+        var s = workDay.getStart();
+        var e = workDay.getEnd();
         t.addRow(Arrays.asList(
                 String.format("#%2s | <c%s>", s.getDayOfMonth(), s.getDayOfWeek()),
                 String.format("<y%s>", s.toLocalTime().format(LOCAL_TIME_FORMATTER)),

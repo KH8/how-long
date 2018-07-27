@@ -2,14 +2,12 @@ package com.h8.howlong.admin.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
 import com.h8.howlong.utils.print.PrintBuilder;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
 
 @Singleton
 public class ListCommand {
@@ -22,8 +20,8 @@ public class ListCommand {
     }
 
     public String list(int month) {
-        List<WorkDay> timesheet = service.getTimesheetForMonth(month);
-        PrintBuilder b = PrintBuilder.builder();
+        var timesheet = service.getTimesheetForMonth(month);
+        var b = PrintBuilder.builder();
         b.ln(String.format("Timesheet for: <c2018/%02d>", month));
         timesheet.forEach(w ->
                 b.ln(String.format("<c%02d> | %s | %s | %s",

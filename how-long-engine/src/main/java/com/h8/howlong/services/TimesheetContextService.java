@@ -32,8 +32,8 @@ public class TimesheetContextService {
     }
 
     public WorkDay getWorkDayOfToday() {
-        LocalDateTime currentTimestamp = LocalDateTime.now();
-        LocalDate key = currentTimestamp.toLocalDate();
+        var currentTimestamp = LocalDateTime.now();
+        var key = currentTimestamp.toLocalDate();
         if (!timesheets.containsKey(key)) {
             timesheets.put(key, createWorkDayOfToday());
         }
@@ -41,8 +41,8 @@ public class TimesheetContextService {
     }
 
     public WorkDay updateWorkDay(WorkDay wd) {
-        LocalDateTime startTimestamp = wd.getStart();
-        LocalDate key = startTimestamp.toLocalDate();
+        var startTimestamp = wd.getStart();
+        var key = startTimestamp.toLocalDate();
         timesheets.put(key, wd);
         repository.writeContent(context);
         return wd;
@@ -61,13 +61,13 @@ public class TimesheetContextService {
     }
 
     public Duration getAverageWorkingTime(int month) {
-        Duration total = getTotalWorkingTime(month);
-        int count = getTimesheetForMonth(month).size();
+        var total = getTotalWorkingTime(month);
+        var count = getTimesheetForMonth(month).size();
         return Duration.ofMillis(total.toMillis() / Math.max(count, 1));
     }
 
     public List<WorkDay> getTimesheetForMonth(int month) {
-        LocalDate today = LocalDate.now();
+        var today = LocalDate.now();
         return timesheets.values()
                 .stream()
                 .filter(d -> today.getYear() == d.getStart().getYear())

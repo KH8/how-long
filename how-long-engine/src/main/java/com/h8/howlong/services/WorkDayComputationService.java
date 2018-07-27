@@ -7,7 +7,6 @@ import com.h8.howlong.domain.WorkDay;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Singleton
 public class WorkDayComputationService {
@@ -27,7 +26,7 @@ public class WorkDayComputationService {
     }
 
     public Duration getElapsedTime() {
-        WorkDay wd = contextService.getWorkDayOfToday();
+        var wd = contextService.getWorkDayOfToday();
         return getElapsedTime(wd);
     }
 
@@ -36,18 +35,18 @@ public class WorkDayComputationService {
     }
 
     public LocalDateTime getSuggestedEndTime() {
-        WorkDay wd = contextService.getWorkDayOfToday();
-        List<WorkDay> timesheet = contextService.getTimesheetForMonth(wd.getStart().getMonthValue());
-        Integer n = timesheet.size();
+        var wd = contextService.getWorkDayOfToday();
+        var timesheet = contextService.getTimesheetForMonth(wd.getStart().getMonthValue());
+        var n = timesheet.size();
 
         timesheet.remove(wd);
-        Long totalSeconds = timesheet
+        var totalSeconds = timesheet
                 .stream()
                 .map(this::getElapsedTime)
                 .reduce(Duration.ZERO, Duration::plus)
                 .toMillis() / 1000;
 
-        Long suggestedWorkDurationSeconds = getWorkDayDurationSeconds() * n - totalSeconds;
+        var suggestedWorkDurationSeconds = getWorkDayDurationSeconds() * n - totalSeconds;
         return wd.getStart().plusSeconds(suggestedWorkDurationSeconds);
     }
 

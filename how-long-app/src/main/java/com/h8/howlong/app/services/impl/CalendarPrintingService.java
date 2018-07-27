@@ -22,7 +22,7 @@ public class CalendarPrintingService extends SummaryPrintingService {
 
     @Override
     String buildSummary(List<WorkDay> timesheet) {
-        PrintTable t = PrintTable.builder()
+        var t = PrintTable.builder()
                 .withCellWidth(CALENDAR_CELL_WIDTH);
         addHeaderRow(t);
         addWorkdays(t, timesheet.iterator());
@@ -30,7 +30,7 @@ public class CalendarPrintingService extends SummaryPrintingService {
     }
 
     private void addHeaderRow(PrintTable t) {
-        List<String> headers = Arrays.stream(DayOfWeek.values())
+        var headers = Arrays.stream(DayOfWeek.values())
                 .map(d -> String.format("<c%s>", d))
                 .collect(Collectors.toList());
         t.addRow(headers);
@@ -43,10 +43,9 @@ public class CalendarPrintingService extends SummaryPrintingService {
     }
 
     private void addWorkdays(PrintTable t, Iterator<WorkDay> timesheet, WorkDay next) {
-        WorkDay c = next;
-        boolean repeat = false;
-
-        List<WorkDay> week = new ArrayList<>();
+        var c = next;
+        var repeat = false;
+        var week = new ArrayList<WorkDay>();
         for (DayOfWeek d : DayOfWeek.values()) {
             if (d.equals(c.getStart().getDayOfWeek())) {
                 week.add(c);
@@ -68,7 +67,7 @@ public class CalendarPrintingService extends SummaryPrintingService {
     }
 
     private void addWorkdays(PrintTable t, List<WorkDay> week) {
-        List<String> row = week
+        var row = week
                 .stream()
                 .map(this::printWorkDay)
                 .collect(Collectors.toList());

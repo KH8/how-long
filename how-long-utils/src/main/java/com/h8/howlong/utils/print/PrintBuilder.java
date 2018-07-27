@@ -26,7 +26,7 @@ public final class PrintBuilder {
     }
 
     public String build() {
-        String s = sb.toString();
+        var s = sb.toString();
         s = resolveColors(s);
         return s;
     }

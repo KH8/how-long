@@ -16,7 +16,7 @@ public abstract class AbstractFileBasedRepository<T> {
 
     private void initialize(String dbFileName) {
         try {
-            File yourFile = new File(dbFileName);
+            var yourFile = new File(dbFileName);
             if (yourFile.createNewFile()) {
                 T t = initializeContent();
                 writeContent(t);
@@ -30,8 +30,8 @@ public abstract class AbstractFileBasedRepository<T> {
 
     public void writeContent(T t) {
         try (
-                FileOutputStream fos = new FileOutputStream(dbFileName);
-                ObjectOutputStream oos = new ObjectOutputStream(fos)
+                var fos = new FileOutputStream(dbFileName);
+                var oos = new ObjectOutputStream(fos)
         ) {
             oos.writeObject(t);
         } catch (Exception e) {
@@ -43,8 +43,8 @@ public abstract class AbstractFileBasedRepository<T> {
     @SuppressWarnings("unchecked")
     public Optional<T> readContent() {
         try (
-                FileInputStream fis = new FileInputStream(dbFileName);
-                ObjectInputStream ois = new ObjectInputStream(fis)
+                var fis = new FileInputStream(dbFileName);
+                var ois = new ObjectInputStream(fis)
         ) {
             return Optional.of((T) ois.readObject());
         } catch (Exception e) {
