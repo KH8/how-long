@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -38,6 +39,12 @@ public class TimesheetContextService {
             timesheets.put(key, createWorkDayOfToday());
         }
         return timesheets.get(key);
+    }
+
+    public Optional<WorkDay> getWorkDayOf(int month, int day) {
+        var currentTimestamp = LocalDateTime.now();
+        var key = LocalDate.of(currentTimestamp.getYear(), month, day);
+        return Optional.ofNullable(timesheets.get(key));
     }
 
     public WorkDay updateWorkDay(WorkDay wd) {
