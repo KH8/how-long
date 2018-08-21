@@ -16,13 +16,13 @@
         <dependency>
             <groupId>com.h8</groupId>
             <artifactId>how-long-utils</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.h8</groupId>
             <artifactId>how-long-engine</artifactId>
-            <version>${parent.version}</version>
+            <version>${project.parent.version}</version>
         </dependency>
     </dependencies>
 
