@@ -1,8 +1,9 @@
-package com.h8.howlong.services;
+package com.h8.howlong.app.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.h8.howlong.domain.WorkDay;
+import com.h8.howlong.services.TimesheetContextService;
 
 import java.time.LocalDateTime;
 
