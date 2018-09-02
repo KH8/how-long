@@ -8,18 +8,32 @@ import com.h8.howlong.utils.print.PrintBuilder;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
+import java.util.Calendar;
+import java.util.Date;
 
 @Singleton
-public class ListCommand {
+public class ListCommandAdministrationService extends AdministrationService {
 
     private final TimesheetContextService service;
 
     @Inject
-    public ListCommand(TimesheetContextService service) {
+    ListCommandAdministrationService(TimesheetContextService service) {
         this.service = service;
     }
 
-    public String list(int month) {
+    @Override
+    public String modifyTimesheet(String[] args) {
+        return list(args);
+    }
+
+    private String list(String[] args) {
+        var date = new Date();
+        var cal = Calendar.getInstance();
+        cal.setTime(date);
+        var month = cal.get(Calendar.MONTH);
+        if (args.length > 1) {
+            month = Integer.parseInt(args[1]);
+        }
         var timesheet = service.getTimesheetForMonth(month);
         var b = PrintBuilder.builder();
         b.ln(String.format("Timesheet for: <c2018/%02d>", month));
@@ -33,5 +47,6 @@ public class ListCommand {
         );
         return b.build();
     }
+
 
 }

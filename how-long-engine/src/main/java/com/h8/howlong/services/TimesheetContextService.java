@@ -83,6 +83,13 @@ public class TimesheetContextService {
                 .collect(Collectors.toList());
     }
 
+    public boolean deleteWorkday(int month, int day) {
+        var currentTimestamp = LocalDateTime.now();
+        var key = LocalDate.of(currentTimestamp.getYear(), month, day);
+        return timesheets.remove(key) != null;
+
+    }
+
     private WorkDay createWorkDayOfToday() {
         return WorkDay.builder()
                 .start(LocalDateTime.now())

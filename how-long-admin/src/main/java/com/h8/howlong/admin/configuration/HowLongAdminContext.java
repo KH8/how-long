@@ -2,19 +2,23 @@ package com.h8.howlong.admin.configuration;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import com.h8.howlong.admin.services.ListCommand;
+import com.h8.howlong.admin.services.AdministrationServiceFactory;
+import com.h8.howlong.admin.services.ListCommandAdministrationService;
 import lombok.Getter;
 
 @Getter
 @Singleton
 public class HowLongAdminContext {
 
-    private final ListCommand listCommand;
+    private final ListCommandAdministrationService listCommandAdministrationService;
+
+    private final AdministrationServiceFactory administrationServiceFactory;
 
     @Inject
     public HowLongAdminContext(
-            ListCommand listCommand) {
-        this.listCommand = listCommand;
+            ListCommandAdministrationService listCommandAdministrationService, AdministrationServiceFactory administrationServiceFactory) {
+        this.listCommandAdministrationService = listCommandAdministrationService;
+        this.administrationServiceFactory = administrationServiceFactory;
     }
 
 }
