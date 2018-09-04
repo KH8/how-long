@@ -19,7 +19,7 @@ public class HowLongAdmin {
 
         var arguments = new ArgumentResolver(args);
         var service = resolveAdministrationService(arguments);
-        Logger.log(service.modifyTimesheet(args));
+        Logger.log(service.modifyTimesheet(arguments));
     }
 
     private static AdministrationService resolveAdministrationService(ArgumentResolver arguments) {
@@ -34,5 +34,4 @@ public class HowLongAdmin {
             return factory.getUnknownCommand();
         }
     }
-
 }

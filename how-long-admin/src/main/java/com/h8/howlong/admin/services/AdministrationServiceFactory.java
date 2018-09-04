@@ -2,8 +2,11 @@ package com.h8.howlong.admin.services;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.h8.howlong.admin.services.impl.DeleteCommandAdministrationService;
+import com.h8.howlong.admin.services.impl.ListCommandAdministrationService;
+import com.h8.howlong.admin.services.impl.UnknownCommandAdministrationService;
+import com.h8.howlong.admin.services.impl.UpdateCommandAdministrationService;
 import com.h8.howlong.services.TimesheetContextService;
-import com.h8.howlong.services.WorkDayComputationService;
 
 @Singleton
 public class AdministrationServiceFactory {
@@ -12,8 +15,7 @@ public class AdministrationServiceFactory {
 
     @Inject
     public AdministrationServiceFactory(
-            TimesheetContextService contextService,
-            WorkDayComputationService computationService) {
+            TimesheetContextService contextService) {
         this.contextService = contextService;
     }
 

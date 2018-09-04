@@ -1,9 +1,9 @@
 package com.h8.howlong.admin.services;
 
-public abstract class AdministrationService {
+import com.h8.howlong.admin.utils.ArgumentResolver;
 
-    public String modifyTimesheet(String[] args) {
-        return "something failed";
-    }
+public interface AdministrationService {
+
+    String modifyTimesheet(ArgumentResolver ar);
 
 }

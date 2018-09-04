@@ -1,39 +1,33 @@
-package com.h8.howlong.admin.services;
+package com.h8.howlong.admin.services.impl;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
+import com.h8.howlong.admin.services.AdministrationService;
+import com.h8.howlong.admin.utils.ArgumentResolver;
 import com.h8.howlong.services.TimesheetContextService;
 import com.h8.howlong.utils.DurationUtils;
 import com.h8.howlong.utils.print.PrintBuilder;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
-import java.util.Date;
 
 @Singleton
-public class ListCommandAdministrationService extends AdministrationService {
+public class ListCommandAdministrationService implements AdministrationService {
 
     private final TimesheetContextService service;
 
     @Inject
-    ListCommandAdministrationService(TimesheetContextService service) {
+    public ListCommandAdministrationService(TimesheetContextService service) {
         this.service = service;
     }
 
     @Override
-    public String modifyTimesheet(String[] args) {
-        return list(args);
+    public String modifyTimesheet(ArgumentResolver ar) {
+        return list(ar.getMonth());
     }
 
-    private String list(String[] args) {
-        var date = new Date();
-        var cal = Calendar.getInstance();
-        cal.setTime(date);
-        var month = cal.get(Calendar.MONTH);
-        if (args.length > 1) {
-            month = Integer.parseInt(args[1]);
-        }
+
+    private String list(int month) {
         var timesheet = service.getTimesheetForMonth(month);
         var b = PrintBuilder.builder();
         b.ln(String.format("Timesheet for: <c2018/%02d>", month));

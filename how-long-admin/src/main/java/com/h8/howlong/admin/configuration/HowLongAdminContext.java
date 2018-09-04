@@ -3,7 +3,7 @@ package com.h8.howlong.admin.configuration;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.h8.howlong.admin.services.AdministrationServiceFactory;
-import com.h8.howlong.admin.services.ListCommandAdministrationService;
+import com.h8.howlong.admin.services.impl.ListCommandAdministrationService;
 import lombok.Getter;
 
 @Getter
