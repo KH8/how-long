@@ -4,6 +4,7 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import com.h8.howlong.admin.services.AdministrationService;
 import com.h8.howlong.admin.utils.ArgumentResolver;
+import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
 
 import java.time.LocalDateTime;
@@ -21,20 +22,20 @@ public class UpdateCommandAdministrationService implements AdministrationService
     @Override
     public String modifyTimesheet(ArgumentResolver ar) {
         var updateMode = getUpdateMode(ar.getUpdateMode());
+        var workday = getWorkdayOrInitializeIfNotExists(ar.getMonth(),ar.getDay(),ar.getStartTime(),ar.getEndTime());
         switch (updateMode) {
             case FULL:
-                return fullUpdate(ar.getMonth(), ar.getDay(), ar.getStartTime(), ar.getEndTime());
+                return fullUpdate(workday, ar.getStartTime(), ar.getEndTime());
             case START_DATE:
-                return startDateUpdate(ar.getMonth(), ar.getDay(), ar.getStartTime());
+                return startDateUpdate(workday, ar.getStartTime());
             case END_DATE:
-                return endDateUpdate(ar.getMonth(), ar.getDay(), ar.getEndTime());
+                return endDateUpdate(workday, ar.getEndTime());
             default:
                 return "Update has failed";
         }
     }
 
-    private String startDateUpdate(int month, int day, LocalDateTime startTime) {
-        var workday = service.getWorkDayOf(month, day).get();
+    private String startDateUpdate(WorkDay workday, LocalDateTime startTime) {
         workday.setStart(startTime);
         service.updateWorkDay(workday);
         if (service.updateWorkDay(workday) != null) {
@@ -42,8 +43,7 @@ public class UpdateCommandAdministrationService implements AdministrationService
         } else return "The update failed";
     }
 
-    private String endDateUpdate(int month, int day, LocalDateTime endTime) {
-        var workday = service.getWorkDayOf(month, day).get();
+    private String endDateUpdate(WorkDay workday, LocalDateTime endTime) {
         workday.setEnd(endTime);
         service.updateWorkDay(workday);
         if (service.updateWorkDay(workday) != null) {
@@ -51,8 +51,7 @@ public class UpdateCommandAdministrationService implements AdministrationService
         } else return "The update failed";
     }
 
-    private String fullUpdate(int month, int day, LocalDateTime startTime, LocalDateTime endTime) {
-        var workday = service.getWorkDayOf(month, day).get();
+    private String fullUpdate(WorkDay workday, LocalDateTime startTime, LocalDateTime endTime) {
         workday.setStart(startTime);
         workday.setEnd(endTime);
         service.updateWorkDay(workday);
@@ -60,7 +59,6 @@ public class UpdateCommandAdministrationService implements AdministrationService
             return "The startTime and the endTime of the day provided has been updated";
         } else return "The update failed";
     }
-
 
     private UpdateMode getUpdateMode(String arg) {
 
@@ -72,6 +70,10 @@ public class UpdateCommandAdministrationService implements AdministrationService
             return UpdateMode.END_DATE;
         } else
             throw new IllegalArgumentException("FULL, START_DATE or END_DATE command expected");
+    }
+
+    private WorkDay getWorkdayOrInitializeIfNotExists (int month, int day, LocalDateTime start, LocalDateTime end){
+        return service.getWorkDayOf(month, day).isPresent() ? service.getWorkDayOf(month, day).get() : service.createWorkDayOfGivenDate(start, end);
     }
 
 

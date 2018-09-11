@@ -25,7 +25,7 @@ public class ArgumentResolver {
     }
 
     public Boolean listMode() {
-        if (args.length > 0 && HowLongAdminCommands.LIST.equals(args[0])) {
+        if (args.length > 0 && HowLongAdminCommands.LIST.equals(args[0].toUpperCase())) {
             if (args.length > 1) {
                 if (0 < Integer.parseInt(args[1]) && 12 >= Integer.parseInt(args[1])) {
                     this.month = Integer.parseInt(args[1]);
@@ -40,7 +40,7 @@ public class ArgumentResolver {
     }
 
     public Boolean updateMode() {
-        if (args.length > 0 && HowLongAdminCommands.UPDATE.equals(args[0])) {
+        if (args.length > 0 && HowLongAdminCommands.UPDATE.equals(args[0].toUpperCase())) {
             this.month = Integer.parseInt(args[1]);
             this.day = Integer.parseInt(args[2]);
             this.date = LocalDate.of(LocalDate.now().getYear(), month, day);
@@ -64,7 +64,7 @@ public class ArgumentResolver {
     }
 
     public Boolean deleteMode() {
-        if (args.length == 3 && HowLongAdminCommands.DELETE.equals(args[0])) {
+        if (args.length == 3 && HowLongAdminCommands.DELETE.equals(args[0].toUpperCase())) {
             this.month = Integer.parseInt(args[1]);
             this.day = Integer.parseInt(args[2]);
             return true;
