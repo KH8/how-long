@@ -7,6 +7,6 @@ public class UnknownCommandAdministrationService implements AdministrationServic
 
     @Override
     public String modifyTimesheet(ArgumentResolver argumentResolver) {
-        return "Command unknown, nothing has been modified";
+        return "Command unknown, nothing has been modified. Please refer to README file for more details";
     }
 }

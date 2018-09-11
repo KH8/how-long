@@ -1,6 +1,7 @@
 package com.h8.howlong.admin.utils;
 
 import com.h8.howlong.admin.configuration.HowLongAdminCommands;
+import com.h8.howlong.utils.Logger;
 import lombok.Getter;
 
 import java.time.LocalDate;
@@ -25,12 +26,16 @@ public class ArgumentResolver {
     }
 
     public Boolean listMode() {
+
         if (args.length > 0 && HowLongAdminCommands.LIST.equals(args[0].toUpperCase())) {
             if (args.length > 1) {
-                if (0 < Integer.parseInt(args[1]) && 12 >= Integer.parseInt(args[1])) {
-                    this.month = Integer.parseInt(args[1]);
-                } else
-                    throw new IllegalArgumentException("Second argument of list mode has to be an integer from 1 to 12 as it stands for the month of the year");
+                try {
+                    if (0 < Integer.parseInt(args[1]) && 12 >= Integer.parseInt(args[1])) {
+                        this.month = Integer.parseInt(args[1]);
+                    }
+                } catch (Exception e) {
+                    invalidArgumentsExceptionHandling(e);
+                }
             } else {
                 var cal = Calendar.getInstance();
                 this.month = cal.get(Calendar.MONTH);
@@ -41,39 +46,49 @@ public class ArgumentResolver {
 
     public Boolean updateMode() {
         if (args.length > 0 && HowLongAdminCommands.UPDATE.equals(args[0].toUpperCase())) {
-            this.month = Integer.parseInt(args[1]);
-            this.day = Integer.parseInt(args[2]);
-            this.date = LocalDate.of(LocalDate.now().getYear(), month, day);
-            this.updateMode = args[3];
-            switch (updateMode) {
-                case "FULL":
-                    this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
-                    this.endTime = LocalDateTime.of(date, LocalTime.parse(args[5]));
-                    break;
-                case "START":
-                    this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
-                    break;
-                case "END":
-                    this.endTime = LocalDateTime.of(date, LocalTime.parse(args[5]));
-                    break;
-                default:
-                    throw new IllegalArgumentException("The third argument of an update command has to be FULL, START or END");
+            try {
+                this.month = Integer.parseInt(args[1]);
+                this.day = Integer.parseInt(args[2]);
+                this.date = LocalDate.of(LocalDate.now().getYear(), month, day);
+                this.updateMode = args[3];
+                switch (updateMode) {
+                    case "FULL":
+                        this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
+                        this.endTime = LocalDateTime.of(date, LocalTime.parse(args[5]));
+                        break;
+                    case "START":
+                        this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
+                        break;
+                    case "END":
+                        this.endTime = LocalDateTime.of(date, LocalTime.parse(args[5]));
+                        break;
+                    default:
+                        throw new IllegalArgumentException("The third argument of an update command has to be FULL, START or END");
+                }
+            } catch (Exception e) {
+                invalidArgumentsExceptionHandling(e);
             }
             return true;
         } else return false;
     }
 
     public Boolean deleteMode() {
-        if (args.length == 3 && HowLongAdminCommands.DELETE.equals(args[0].toUpperCase())) {
-            this.month = Integer.parseInt(args[1]);
-            this.day = Integer.parseInt(args[2]);
+        if (args.length > 0 && HowLongAdminCommands.DELETE.equals(args[0].toUpperCase())) {
+            try {
+                this.month = Integer.parseInt(args[1]);
+                this.day = Integer.parseInt(args[2]);
+            } catch (Exception e) {
+                invalidArgumentsExceptionHandling(e);
+            }
             return true;
         } else return false;
 
     }
 
-//    private void printUsage() {
-//
-//    }
+    private void invalidArgumentsExceptionHandling(Exception e) {
+        Logger.log("Invalid argument type. Please refer to README file for more details");
+        e.printStackTrace();
+        System.exit(1);
+    }
 
 }
