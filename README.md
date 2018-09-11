@@ -27,12 +27,12 @@ There is a convenient shell script `run.sh` to run pre-build applications
 
 - In order to run main CLI app run:
     ```bash
-    sh run.sh app <ARGS>
+    sh run.sh app {ARGS}
     ```
 
 - In order to run admin CLI app run:
     ```bash
-    sh run.sh admin <ARGS>
+    sh run.sh admin {ARGS}
     ```
 
 Drill down into the modules to find more
