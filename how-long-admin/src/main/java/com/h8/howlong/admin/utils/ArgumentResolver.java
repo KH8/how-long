@@ -38,7 +38,7 @@ public class ArgumentResolver {
                 }
             } else {
                 var cal = Calendar.getInstance();
-                this.month = cal.get(Calendar.MONTH);
+                this.month = cal.get(Calendar.MONTH) + 1;
             }
             return true;
         } else return false;
@@ -50,7 +50,7 @@ public class ArgumentResolver {
                 this.month = Integer.parseInt(args[1]);
                 this.day = Integer.parseInt(args[2]);
                 this.date = LocalDate.of(LocalDate.now().getYear(), month, day);
-                this.updateMode = args[3];
+                this.updateMode = args[3].toUpperCase();
                 switch (updateMode) {
                     case "FULL":
                         this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
@@ -60,7 +60,7 @@ public class ArgumentResolver {
                         this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
                         break;
                     case "END":
-                        this.endTime = LocalDateTime.of(date, LocalTime.parse(args[5]));
+                        this.endTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
                         break;
                     default:
                         throw new IllegalArgumentException("The third argument of an update command has to be FULL, START or END");
@@ -86,9 +86,9 @@ public class ArgumentResolver {
     }
 
     private void invalidArgumentsExceptionHandling(Exception e) {
-        Logger.log("Invalid argument type. Please refer to README file for more details");
-        e.printStackTrace();
-        System.exit(1);
+        Logger.log("Command recognized, although exception appeared:" + e.toString());
+        Logger.log("Invalid argument type. Nothing has been changed. Please refer to README file for more details.");
+        System.exit(0);
     }
 
 }

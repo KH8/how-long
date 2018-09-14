@@ -7,7 +7,9 @@ import com.h8.howlong.admin.utils.ArgumentResolver;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Singleton
 public class UpdateCommandAdministrationService implements AdministrationService {
@@ -22,7 +24,7 @@ public class UpdateCommandAdministrationService implements AdministrationService
     @Override
     public String modifyTimesheet(ArgumentResolver ar) {
         var updateMode = getUpdateMode(ar.getUpdateMode());
-        var workday = getWorkdayOrInitializeIfNotExists(ar.getMonth(),ar.getDay(),ar.getStartTime(),ar.getEndTime());
+        var workday = getWorkdayOrInitializeIfNotExists(ar.getMonth(), ar.getDay(), ar.getStartTime(), ar.getEndTime());
         switch (updateMode) {
             case FULL:
                 return fullUpdate(workday, ar.getStartTime(), ar.getEndTime());
@@ -64,16 +66,26 @@ public class UpdateCommandAdministrationService implements AdministrationService
 
         if ("FULL".equals(arg)) {
             return UpdateMode.FULL;
-        } else if ("START_DATE".equals(arg)) {
+        } else if ("START".equals(arg)) {
             return UpdateMode.START_DATE;
-        } else if ("END_DATE".equals(arg)) {
+        } else if ("END".equals(arg)) {
             return UpdateMode.END_DATE;
         } else
             throw new IllegalArgumentException("FULL, START_DATE or END_DATE command expected");
     }
 
-    private WorkDay getWorkdayOrInitializeIfNotExists (int month, int day, LocalDateTime start, LocalDateTime end){
+    private WorkDay getWorkdayOrInitializeIfNotExists(int month, int day, LocalDateTime start, LocalDateTime end) {
+        if (start == null) start = initializeStart(month, day);
+        if (end == null) end = initializeEnd(month, day);
         return service.getWorkDayOf(month, day).isPresent() ? service.getWorkDayOf(month, day).get() : service.createWorkDayOfGivenDate(start, end);
+    }
+
+    private LocalDateTime initializeStart(int month, int day) {
+        return LocalDateTime.of(LocalDate.of(LocalDate.now().getYear(), month, day), LocalTime.of(0, 0, 1));
+    }
+
+    private LocalDateTime initializeEnd(int month, int day) {
+        return LocalDateTime.of(LocalDate.of(LocalDate.now().getYear(), month, day), LocalTime.of(23, 59, 59));
     }
 
 
