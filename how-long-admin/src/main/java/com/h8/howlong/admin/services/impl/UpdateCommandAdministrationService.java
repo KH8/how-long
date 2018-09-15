@@ -7,9 +7,7 @@ import com.h8.howlong.admin.utils.ArgumentResolver;
 import com.h8.howlong.domain.WorkDay;
 import com.h8.howlong.services.TimesheetContextService;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Singleton
 public class UpdateCommandAdministrationService implements AdministrationService {
@@ -75,19 +73,10 @@ public class UpdateCommandAdministrationService implements AdministrationService
     }
 
     private WorkDay getWorkdayOrInitializeIfNotExists(int month, int day, LocalDateTime start, LocalDateTime end) {
-        if (start == null) start = initializeStart(month, day);
-        if (end == null) end = initializeEnd(month, day);
+        if (start == null) start = end;
+        if (end == null) end = start;
         return service.getWorkDayOf(month, day).isPresent() ? service.getWorkDayOf(month, day).get() : service.createWorkDayOfGivenDate(start, end);
     }
-
-    private LocalDateTime initializeStart(int month, int day) {
-        return LocalDateTime.of(LocalDate.of(LocalDate.now().getYear(), month, day), LocalTime.of(0, 0, 1));
-    }
-
-    private LocalDateTime initializeEnd(int month, int day) {
-        return LocalDateTime.of(LocalDate.of(LocalDate.now().getYear(), month, day), LocalTime.of(23, 59, 59));
-    }
-
 
     public enum UpdateMode {
         FULL,
