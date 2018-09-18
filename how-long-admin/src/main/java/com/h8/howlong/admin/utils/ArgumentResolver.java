@@ -1,6 +1,7 @@
 package com.h8.howlong.admin.utils;
 
-import com.h8.howlong.admin.configuration.HowLongAdminCommands;
+import com.h8.howlong.admin.configuration.HowLongAdminCommand;
+import com.h8.howlong.admin.configuration.HowLongAdminUpdateMode;
 import com.h8.howlong.utils.Logger;
 import lombok.Getter;
 
@@ -25,9 +26,51 @@ public class ArgumentResolver {
         this.args = args;
     }
 
+    public HowLongAdminCommand getCommand()
+            throws ArgumentResolutionFailedException {
+        //TODO!!!
+        return null;
+    }
+
+    public HowLongAdminUpdateMode getUpdateMode()
+            throws ArgumentResolutionFailedException {
+        //TODO!!!
+        return null;
+    }
+
+    public Integer getMonth()
+            throws ArgumentResolutionFailedException {
+        //TODO!!!
+        return null;
+    }
+
+    public Integer getDay()
+            throws ArgumentResolutionFailedException {
+        //TODO!!!
+        return null;
+    }
+
+    public LocalDateTime getStartTime()
+            throws ArgumentResolutionFailedException {
+        //TODO!!!
+        return null;
+    }
+
+    public LocalDateTime getEndTime()
+            throws ArgumentResolutionFailedException {
+        //TODO!!!
+        return null;
+    }
+
+
+
+
+
+
+
     public Boolean listMode() {
 
-        if (args.length > 0 && HowLongAdminCommands.LIST.equals(args[0].toUpperCase())) {
+        if (args.length > 0 && HowLongAdminCommand.LIST.equals(args[0].toUpperCase())) {
             if (args.length > 1) {
                 try {
                     if (0 < Integer.parseInt(args[1]) && 12 >= Integer.parseInt(args[1])) {
@@ -45,7 +88,7 @@ public class ArgumentResolver {
     }
 
     public Boolean updateMode() {
-        if (args.length > 0 && HowLongAdminCommands.UPDATE.equals(args[0].toUpperCase())) {
+        if (args.length > 0 && HowLongAdminCommand.UPDATE.equals(args[0].toUpperCase())) {
             try {
                 this.month = Integer.parseInt(args[1]);
                 this.day = Integer.parseInt(args[2]);
@@ -73,7 +116,7 @@ public class ArgumentResolver {
     }
 
     public Boolean deleteMode() {
-        if (args.length > 0 && HowLongAdminCommands.DELETE.equals(args[0].toUpperCase())) {
+        if (args.length > 0 && HowLongAdminCommand.DELETE.equals(args[0].toUpperCase())) {
             try {
                 this.month = Integer.parseInt(args[1]);
                 this.day = Integer.parseInt(args[2]);
