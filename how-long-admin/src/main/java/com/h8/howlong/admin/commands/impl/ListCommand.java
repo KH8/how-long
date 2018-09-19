@@ -6,10 +6,12 @@ import com.h8.howlong.admin.commands.CommandResultStatus;
 import com.h8.howlong.admin.services.TimesheetManagementService;
 import com.h8.howlong.utils.DurationUtils;
 import com.h8.howlong.utils.print.PrintBuilder;
+import lombok.Data;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
+@Data
 public class ListCommand extends AbstractManagementCommand {
 
     private final Integer month;

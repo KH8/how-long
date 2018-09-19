@@ -1,9 +1,11 @@
 package com.h8.howlong.admin.commands;
 
 import com.h8.howlong.admin.services.TimesheetManagementService;
+import lombok.Data;
 
 import javax.inject.Inject;
 
+@Data
 public abstract class AbstractManagementCommand implements Command {
 
     protected TimesheetManagementService timesheetManagementService;
@@ -14,5 +16,5 @@ public abstract class AbstractManagementCommand implements Command {
     }
 
     public abstract CommandResult execute();
-    
+
 }

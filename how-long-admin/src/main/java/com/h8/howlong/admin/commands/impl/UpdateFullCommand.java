@@ -3,9 +3,11 @@ package com.h8.howlong.admin.commands.impl;
 import com.h8.howlong.admin.commands.AbstractManagementCommand;
 import com.h8.howlong.admin.commands.CommandResult;
 import com.h8.howlong.admin.services.TimesheetManagementService;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
 public class UpdateFullCommand extends AbstractManagementCommand {
 
     private final Integer month;
