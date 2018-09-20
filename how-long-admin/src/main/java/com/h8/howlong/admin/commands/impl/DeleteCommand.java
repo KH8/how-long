@@ -1,11 +1,12 @@
 package com.h8.howlong.admin.commands.impl;
 
-import com.h8.howlong.admin.commands.AbstractManagementCommand;
-import com.h8.howlong.admin.commands.CommandResult;
-import com.h8.howlong.admin.services.TimesheetManagementService;
-import lombok.Data;
+import com.h8.howlong.admin.commands.*;
+import com.h8.howlong.admin.services.*;
+import lombok.*;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
+
 public class DeleteCommand extends AbstractManagementCommand {
 
     private final Integer month;
@@ -21,8 +22,17 @@ public class DeleteCommand extends AbstractManagementCommand {
 
     @Override
     public CommandResult execute() {
-        //TODO!!!
-        return null;
+        var result = CommandResultStatus.SUCCESS;
+        try {
+            timesheetManagementService.delete(month, day);
+        } catch (TimesheetManagementFailedException e) {
+            result = CommandResultStatus.ERROR;
+        }
+        return CommandResult.builder()
+                .status(result)
+                .message(result.toString())
+                .build();
     }
 
 }
+

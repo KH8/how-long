@@ -1,13 +1,14 @@
 package com.h8.howlong.admin.commands.impl;
 
-import com.h8.howlong.admin.commands.AbstractManagementCommand;
-import com.h8.howlong.admin.commands.CommandResult;
-import com.h8.howlong.admin.services.TimesheetManagementService;
-import lombok.Data;
+import com.h8.howlong.admin.commands.*;
+import com.h8.howlong.admin.services.*;
+import lombok.*;
 
-import java.time.LocalDateTime;
+import java.time.*;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
+
 public class UpdateFullCommand extends AbstractManagementCommand {
 
     private final Integer month;
@@ -30,8 +31,17 @@ public class UpdateFullCommand extends AbstractManagementCommand {
 
     @Override
     public CommandResult execute() {
-        //TODO!!!
-        return null;
+        var result = CommandResultStatus.SUCCESS;
+        try {
+            timesheetManagementService.updateStartTime(month, day, start);
+            timesheetManagementService.updateEndTime(month, day, start);
+        } catch (TimesheetManagementFailedException e) {
+            result = CommandResultStatus.ERROR;
+        }
+        return CommandResult.builder()
+                .status(CommandResultStatus.SUCCESS)
+                .message(result.toString())
+                .build();
     }
 
 }
