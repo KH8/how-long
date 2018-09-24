@@ -2,16 +2,17 @@ package com.h8.howlong.admin.commands.impl;
 
 import com.h8.howlong.admin.commands.AbstractManagementCommand;
 import com.h8.howlong.admin.commands.CommandResult;
-import com.h8.howlong.admin.commands.CommandResultStatus;
 import com.h8.howlong.admin.services.TimesheetManagementService;
 import com.h8.howlong.utils.DurationUtils;
 import com.h8.howlong.utils.print.PrintBuilder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class ListCommand extends AbstractManagementCommand {
 
     private final Integer month;
@@ -34,10 +35,6 @@ public class ListCommand extends AbstractManagementCommand {
                         DurationUtils.format(Duration.between(w.getStart(), w.getEnd())))
                 )
         );
-        return CommandResult.builder()
-                .message(b.build())
-                .status(CommandResultStatus.SUCCESS)
-                .build();
+        return CommandResult.ok(b.build());
     }
-
 }

@@ -1,23 +1,25 @@
 package com.h8.howlong.admin.utils;
 
-import com.h8.howlong.admin.configuration.*;
-import lombok.*;
+import com.h8.howlong.admin.configuration.HowLongAdminCommand;
+import com.h8.howlong.admin.configuration.HowLongAdminUpdateMode;
+import lombok.Getter;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.YearMonth;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Optional;
 
 @Getter
 public class ArgumentResolver {
 
     private final String[] args;
-
-//    private int day;
-//    private int month;
-//    private String command;
-//    private String updateMode;
-//    private LocalDate date;
-//    private LocalDateTime startTime;
-//    private LocalDateTime endTime;
+    private final String MONTH_ARG_PREFIX = "--month=";
+    private final String DAY_ARG_PREFIX = "--day=";
+    private final String START_TIME_ARG_PREFIX = "--start-time=";
+    private final String END_TIME_ARG_PREFIX = "--end-time=";
 
     public ArgumentResolver(String[] args) {
         this.args = args;
@@ -25,12 +27,15 @@ public class ArgumentResolver {
 
     public HowLongAdminCommand getCommand()
             throws ArgumentResolutionFailedException {
+        if (args.length < 1) {
+            throw new ArgumentResolutionFailedException("Please provide any command");
+        }
         var command = args[0].toUpperCase();
         switch (command) {
             case "UPDATE":
                 return HowLongAdminCommand.UPDATE;
             case "LIST":
-                return HowLongAdminCommand.UPDATE;
+                return HowLongAdminCommand.LIST;
             case "DELETE":
                 return HowLongAdminCommand.DELETE;
             default:
@@ -38,72 +43,78 @@ public class ArgumentResolver {
         }
     }
 
-    public HowLongAdminUpdateMode getUpdateMode()
-            throws ArgumentResolutionFailedException {
-        var updateMode = args[3].toUpperCase();
-        switch (updateMode) {
-            case "FULL":
-                return HowLongAdminUpdateMode.FULL;
-            case "START":
-                return HowLongAdminUpdateMode.START;
-            case "END":
-                return HowLongAdminUpdateMode.END;
-            default:
-                throw new ArgumentResolutionFailedException("Improper update mode argument");
-        }
+    public HowLongAdminUpdateMode getUpdateMode() throws ArgumentResolutionFailedException {
+        if (getTimeArgument(getSTART_TIME_ARG_PREFIX()).isPresent() && getTimeArgument(getEND_TIME_ARG_PREFIX()).isPresent())
+            return HowLongAdminUpdateMode.FULL;
+        else if (getTimeArgument(getSTART_TIME_ARG_PREFIX()).isPresent())
+            return HowLongAdminUpdateMode.START;
+        else if (getTimeArgument(getEND_TIME_ARG_PREFIX()).isPresent())
+            return HowLongAdminUpdateMode.END;
+        else
+            throw new ArgumentResolutionFailedException("Could not find neither start time nor end time of update");
     }
 
-    public Integer getMonth()
+    public int getMonth()
             throws ArgumentResolutionFailedException {
-        Integer month = null;
-        if (args.length > 1) {
-            try {
-                if (0 < Integer.parseInt(args[1]) && 12 >= Integer.parseInt(args[1])) {
-                    month = Integer.parseInt(args[1]);
-                }
-            } catch (Exception e) {
-                throw new ArgumentResolutionFailedException("Improper month value ");
-            }
-        } else {
-            var cal = Calendar.getInstance();
-            month = cal.get(Calendar.MONTH) + 1;
-        }
-        return month;
+        var month = getIntegerArgument(getMONTH_ARG_PREFIX())
+                .orElse(getCurrentMonth());
+        return validateMonth(month);
     }
 
-    public Integer getDay()
-            throws ArgumentResolutionFailedException {
+    public int getDay() throws ArgumentResolutionFailedException {
+        var day = getMandatoryIntegerArgument(getDAY_ARG_PREFIX());
+        return validateIfNumberOfDaysIsValidForAGivenMonth(getMonth(), day);
+    }
+
+    public LocalDateTime getStartTime() throws ArgumentResolutionFailedException {
+        return getDateTimeArgument(getSTART_TIME_ARG_PREFIX());
+    }
+
+    public LocalDateTime getEndTime() throws ArgumentResolutionFailedException {
+        return getDateTimeArgument(getEND_TIME_ARG_PREFIX());
+    }
+
+    private LocalDateTime getDateTimeArgument(String prefix) throws ArgumentResolutionFailedException {
+        return LocalDateTime.of(getLocalDate(), getTimeArgument(prefix).get());
+    }
+
+    private int getMandatoryIntegerArgument(String prefix) throws ArgumentResolutionFailedException {
+        return getIntegerArgument(prefix)
+                .orElseThrow(() -> {
+                    var message = String.format("Could not find '%s' argument", prefix.replace("=", ""));
+                    return new ArgumentResolutionFailedException(message);
+                });
+    }
+
+    private Optional<Integer> getIntegerArgument(String prefix) throws ArgumentResolutionFailedException {
         try {
-            if (numberOfDaysIsValidForAGivenMonth(Integer.parseInt(args[1]), Integer.parseInt(args[2]))) {
-                return Integer.parseInt(args[2]);
-            } else {
-                throw new ArgumentResolutionFailedException("Improper day value ");
-            }
-        } catch (Exception e) {
-            throw new ArgumentResolutionFailedException("Improper day value ");
+            return getArgument(prefix)
+                    .map(Integer::parseInt);
+        } catch (NumberFormatException e) {
+            var message = String.format("Could not parse '%s' argument", prefix.replace("=", ""));
+            throw new ArgumentResolutionFailedException(message);
         }
     }
 
-    public LocalDateTime getStartTime()
-            throws ArgumentResolutionFailedException {
+    private Optional<LocalTime> getTimeArgument(String prefix) throws ArgumentResolutionFailedException {
         try {
-            return LocalDateTime.of(getDate(), LocalTime.parse(args[4]));
+            return getArgument(prefix)
+                    .map(LocalTime::parse);
         } catch (Exception e) {
-            throw new ArgumentResolutionFailedException("Improper start time argument");
+            var message = String.format("Could not parse '%s' argument", prefix.replace("=", ""));
+            throw new ArgumentResolutionFailedException(message);
         }
     }
 
-    //Problem opisany w pytaniach na google drive
-    public LocalDateTime getEndTime()
-            throws ArgumentResolutionFailedException {
-        var updateMode = getUpdateMode();
-        try {
-            if (updateMode.equals(HowLongAdminUpdateMode.FULL)) {
-                return LocalDateTime.of(getDate(), LocalTime.parse(args[5]));
-            } else return LocalDateTime.of(getDate(), LocalTime.parse(args[4]));
-        } catch (Exception e) {
-            throw new ArgumentResolutionFailedException("Improper end time argument");
-        }
+    private LocalDate getLocalDate() throws ArgumentResolutionFailedException {
+        return LocalDate.of(LocalDate.now().getYear(), getMonth(), getDay());
+    }
+
+    private Optional<String> getArgument(String prefix) {
+        return Arrays.stream(args)
+                .filter(a -> a.startsWith(prefix))
+                .map(a -> a.replaceFirst(prefix, ""))
+                .findAny();
     }
 
     private int getNumberOfDaysOfAGivenMonth(int month) {
@@ -115,61 +126,20 @@ public class ArgumentResolver {
                 .lengthOfMonth();
     }
 
-    private boolean numberOfDaysIsValidForAGivenMonth(int month, int day) {
-        return 0 < day && day <= getNumberOfDaysOfAGivenMonth(month);
+    private int getCurrentMonth() {
+        var cal = Calendar.getInstance();
+        return cal.get(Calendar.MONTH) + 1;
     }
 
-    private LocalDate getDate() throws ArgumentResolutionFailedException {
-        return LocalDate.of(LocalDate.now().getYear(), getMonth(), getDay());
+    private int validateIfNumberOfDaysIsValidForAGivenMonth(int month, int day) throws ArgumentResolutionFailedException {
+        if (0 < day && day <= getNumberOfDaysOfAGivenMonth(month))
+            return day;
+        else throw new ArgumentResolutionFailedException("Number of days cannot be applied to a given month");
     }
 
-
-
-//    public Boolean updateMode() {
-//        if (args.length > 0 && HowLongAdminCommand.UPDATE.equals(args[0].toUpperCase())) {
-//            try {
-//                this.month = Integer.parseInt(args[1]);
-//                this.day = Integer.parseInt(args[2]);
-//                this.date = LocalDate.of(LocalDate.now().getYear(), month, day);
-//                this.updateMode = args[3].toUpperCase();
-//                switch (updateMode) {
-//                    case "FULL":
-//                        this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
-//                        this.endTime = LocalDateTime.of(date, LocalTime.parse(args[5]));
-//                        break;
-//                    case "START":
-//                        this.startTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
-//                        break;
-//                    case "END":
-//                        this.endTime = LocalDateTime.of(date, LocalTime.parse(args[4]));
-//                        break;
-//                    default:
-//                        throw new IllegalArgumentException("The third argument of an update command has to be FULL, START or END");
-//                }
-//            } catch (Exception e) {
-//                invalidArgumentsExceptionHandling(e);
-//            }
-//            return true;
-//        } else return false;
-//    }
-//
-//    public Boolean deleteMode() {
-//        if (args.length > 0 && HowLongAdminCommand.DELETE.equals(args[0].toUpperCase())) {
-//            try {
-//                this.month = Integer.parseInt(args[1]);
-//                this.day = Integer.parseInt(args[2]);
-//            } catch (Exception e) {
-//                invalidArgumentsExceptionHandling(e);
-//            }
-//            return true;
-//        } else return false;
-//
-//    }
-//
-//    private void invalidArgumentsExceptionHandling(Exception e) {
-//        Logger.log("Command recognized, although exception appeared:" + e.toString());
-//        Logger.log("Invalid argument type. Nothing has been changed. Please refer to README file for more details.");
-//        System.exit(0);
-//    }
-//
+    private int validateMonth(int month) throws ArgumentResolutionFailedException {
+        if (0 < month && month < 13) {
+            return month;
+        } else throw new ArgumentResolutionFailedException("Month value is out of range");
+    }
 }

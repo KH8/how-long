@@ -30,12 +30,26 @@ public class HowLongAdmin {
             }
         } catch (ArgumentResolutionFailedException e) {
             e.printStackTrace();
+            System.out.print(printUsage());
         }
     }
 
     private static String printUsage() {
-        //TODO!!! Implement usage printing
-        return "";
+        return "The following arguments are available:\n" +
+                "\n" +
+                "- `LIST` --month={MONTH}\n" +
+                "\n" +
+                "    Lists all records for given month.\n" +
+                "    Month argument is optional, if not provided current month is taken.\n" +
+                "\n" +
+                "- `UPDATE` --month={MONTH} --day={DAY} --start-time={hh:mm:ss} --end-time={hh:mm:ss}\n" +
+                "\n" +
+                "    Updates record of given month and day.\n" +
+                "    If record does not exist new record is created.\n" +
+                "\n" +
+                "- `DELETE` --month={MONTH} --day={DAY}\n" +
+                "\n" +
+                "    Deletes record of given month and day.";
     }
 
 }

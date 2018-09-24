@@ -14,7 +14,7 @@ public class CommandFactory {
     private TimesheetManagementService timesheetManagementService;
 
     @Inject
-    public CommandFactory(TimesheetManagementService timesheetManagementService) {
+    CommandFactory(TimesheetManagementService timesheetManagementService) {
         this.timesheetManagementService = timesheetManagementService;
     }
 
@@ -55,8 +55,9 @@ public class CommandFactory {
                 return new UpdateFullCommand(
                         timesheetManagementService,
                         args.getMonth(), args.getDay(), args.getStartTime(), args.getEndTime());
+            default:
+                throw new ArgumentResolutionFailedException("Could not update mode");
         }
-        throw new ArgumentResolutionFailedException("Could not update mode");
     }
 
     private Command resolveDeleteCommand(ArgumentResolver args)

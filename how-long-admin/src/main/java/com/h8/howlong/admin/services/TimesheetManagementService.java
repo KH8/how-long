@@ -1,11 +1,11 @@
 package com.h8.howlong.admin.services;
 
-import com.h8.howlong.domain.*;
-import com.h8.howlong.services.*;
+import com.h8.howlong.domain.WorkDay;
+import com.h8.howlong.services.TimesheetContextService;
 
-import javax.inject.*;
-import java.time.*;
-import java.util.*;
+import javax.inject.Inject;
+import java.time.LocalDateTime;
+import java.util.List;
 
 public class TimesheetManagementService {
 
@@ -22,34 +22,33 @@ public class TimesheetManagementService {
 
     public void updateStartTime(Integer month, Integer day, LocalDateTime time)
             throws TimesheetManagementFailedException {
-
         WorkDay workday = contextService.getWorkDayOf(month, day)
                 .orElse(contextService.createWorkDayOfGivenDate(time, time));
-        if (workday.getEnd().isAfter(time)) {
-            workday.setStart(time);
-        } else throw new TimesheetManagementFailedException("Provided start time is after end time of the given day");
-        contextService.updateWorkDay(workday);
-        if (contextService.updateWorkDay(workday) == null)
+        if (workday.getEnd().isBefore(time)) {
+            throw new TimesheetManagementFailedException("Provided start time is after end time of the given day");
+        } else workday.setStart(time);
+        var updated = contextService.updateWorkDay(workday);
+        if (updated == null)
             throw new TimesheetManagementFailedException("Start date of provided day has not been updated");
     }
 
     public void updateEndTime(Integer month, Integer day, LocalDateTime time)
             throws TimesheetManagementFailedException {
         WorkDay workday = contextService.getWorkDayOf(month, day)
-                .orElse(contextService.createWorkDayOfGivenDate(time,time));
-        if (workday.getStart().isBefore(time)) {
-            workday.setStart(time);
-        } else throw new TimesheetManagementFailedException("Provided start time is after end time of the given day");
-        workday.setEnd(time);
-        contextService.updateWorkDay(workday);
-        if (contextService.updateWorkDay(workday) == null)
+                .orElse(contextService.createWorkDayOfGivenDate(time, time));
+        if (workday.getStart().isAfter(time)) {
+            throw new TimesheetManagementFailedException("Provided start time is after end time of the given day");
+        } else workday.setEnd(time);
+        var updated = contextService.updateWorkDay(workday);
+        if (updated == null)
             throw new TimesheetManagementFailedException("End date of provided day has not been updated");
     }
 
     public void delete(Integer month, Integer day)
             throws TimesheetManagementFailedException {
-        if (contextService.deleteWorkday(month, day)) {
-            contextService.deleteWorkday(month, day);
-        } else throw new TimesheetManagementFailedException("Provided day has not been found");
+        var deleted = contextService.deleteWorkday(month, day);
+        if (!deleted) {
+            throw new TimesheetManagementFailedException("Provided day has not been found");
+        }
     }
 }

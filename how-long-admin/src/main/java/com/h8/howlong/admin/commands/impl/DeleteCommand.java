@@ -1,8 +1,14 @@
 package com.h8.howlong.admin.commands.impl;
 
-import com.h8.howlong.admin.commands.*;
-import com.h8.howlong.admin.services.*;
-import lombok.*;
+import com.h8.howlong.admin.commands.AbstractManagementCommand;
+import com.h8.howlong.admin.commands.CommandResult;
+import com.h8.howlong.admin.services.TimesheetManagementFailedException;
+import com.h8.howlong.admin.services.TimesheetManagementService;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.text.DateFormatSymbols;
+import java.util.Locale;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -22,16 +28,13 @@ public class DeleteCommand extends AbstractManagementCommand {
 
     @Override
     public CommandResult execute() {
-        var result = CommandResultStatus.SUCCESS;
+        String monthName = new DateFormatSymbols(Locale.ENGLISH).getMonths()[month - 1];
         try {
             timesheetManagementService.delete(month, day);
         } catch (TimesheetManagementFailedException e) {
-            result = CommandResultStatus.ERROR;
+            return CommandResult.error(String.format("The day '%s' of '%s' has not been found and therefore, has not been deleted", day, monthName));
         }
-        return CommandResult.builder()
-                .status(result)
-                .message(result.toString())
-                .build();
+        return CommandResult.ok(String.format("The day '%s' of '%s' has been deleted", day, monthName));
     }
 
 }

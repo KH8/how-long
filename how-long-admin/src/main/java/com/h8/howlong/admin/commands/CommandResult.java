@@ -11,4 +11,12 @@ public class CommandResult {
 
     private final CommandResultStatus status;
 
+    public static CommandResult ok(String message) {
+        return new CommandResult(message, CommandResultStatus.SUCCESS);
+    }
+
+    public static CommandResult error(String message) {
+        return new CommandResult(message, CommandResultStatus.ERROR);
+    }
+
 }

@@ -1,10 +1,13 @@
 package com.h8.howlong.admin.commands.impl;
 
-import com.h8.howlong.admin.commands.*;
-import com.h8.howlong.admin.services.*;
-import lombok.*;
+import com.h8.howlong.admin.commands.AbstractManagementCommand;
+import com.h8.howlong.admin.commands.CommandResult;
+import com.h8.howlong.admin.services.TimesheetManagementFailedException;
+import com.h8.howlong.admin.services.TimesheetManagementService;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.time.*;
+import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
@@ -27,16 +30,12 @@ public class UpdateStartCommand extends AbstractManagementCommand {
 
     @Override
     public CommandResult execute() {
-        var result = CommandResultStatus.SUCCESS;
         try {
             timesheetManagementService.updateStartTime(month, day, start);
         } catch (TimesheetManagementFailedException e) {
-            result = CommandResultStatus.ERROR;
+            return CommandResult.error(String.format("The day '%s'.'%s' has not been updated", day, month));
         }
-        return CommandResult.builder()
-                .status(CommandResultStatus.SUCCESS)
-                .message(result.toString())
-                .build();
+        return CommandResult.ok(String.format("The day '%s'.'%s' has been updated", day, month));
     }
 
 }
