@@ -11,16 +11,22 @@ mvn clean install
 
 The following arguments are available:
 
-- `LIST` --month={MONTH}
+- `LIST` {MONTH}
+    
+    Lists all records for given month. 
+    Month argument is optional, if not provided current month is taken
 
-    Lists all records for given month.
-    Month argument is optional, if not provided current month is taken.
+- `UPDATE` {MONTH} {DAY} {MODE: FULL | START | END} {START_TIME} {END_TIME}
+    
+    Updated record of given month and day
+    If record does not exist new record is be created
+    Modes:
+    - `FULL`: both start and end date are updated
+    - `START`: only start date is updated
+    - `END`: only end date is updated
+    
+    Date format should be provided as `hh:mm:ss`
 
-- `UPDATE` --month={MONTH} --day={DAY} --start-time={hh:mm:ss} --end-time={hh:mm:ss}
-
-    Updates record of given month and day.
-    If record does not exist new record is created.
-
-- `DELETE` --month={MONTH} --day={DAY}
-
-    Deletes record of given month and day.
+- `DELETE` {MONTH} {DAY}
+    
+    Deletes ecord of given month and day

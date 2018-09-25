@@ -83,23 +83,6 @@ public class TimesheetContextService {
                 .collect(Collectors.toList());
     }
 
-    public boolean deleteWorkday(int month, int day) {
-        var currentTimestamp = LocalDateTime.now();
-        var key = LocalDate.of(currentTimestamp.getYear(), month, day);
-        var deleted = timesheets.remove(key) != null;
-        if (deleted) {
-            repository.writeContent(context);
-        }
-        return deleted;
-    }
-
-    public WorkDay createWorkDayOfGivenDate(LocalDateTime start, LocalDateTime end) {
-        return WorkDay.builder()
-                .start(start)
-                .end(end)
-                .build();
-    }
-
     private WorkDay createWorkDayOfToday() {
         return WorkDay.builder()
                 .start(LocalDateTime.now())
