@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.catchThrowable;
 
-public class ArgumentResolverTest {
+class ArgumentResolverTest {
 
     @Test
     void shouldResolveListCommand()
@@ -38,6 +38,19 @@ public class ArgumentResolverTest {
     }
 
     @Test
+    void shouldResolveDeleteCommand() throws ArgumentResolutionFailedException {
+        //given
+        var args = Arrays.array("Delete");
+
+        //when
+        var a = new ArgumentResolver(args);
+        var result = a.getCommand();
+
+        //then
+        assertThat(result).isEqualTo(HowLongAdminCommand.DELETE);
+    }
+
+    @Test
     void shouldThrowAnExceptionForUnknownCommand() {
         //given
         var args = Arrays.array("UNKNOWN");
@@ -52,7 +65,17 @@ public class ArgumentResolverTest {
                 .hasMessage("Command argument 'UNKNOWN' is invalid");
     }
 
-    //TODO!!!
-    //implement rest of test cases
+    @Test
+    void shouldReturnFullUpdateMode() {
+    }
+
+    @Test
+    void shouldReturnStartUpdateMode() {
+    }
+
+    @Test
+    void shouldReturnEndUpdateMode() {
+    }
+
 
 }
