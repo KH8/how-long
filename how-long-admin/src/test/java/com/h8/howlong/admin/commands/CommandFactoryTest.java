@@ -7,6 +7,7 @@ import com.h8.howlong.admin.utils.*;
 import org.junit.jupiter.api.*;
 
 import java.time.*;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -53,16 +54,32 @@ class CommandFactoryTest {
     void shouldProduceDeleteCommand() throws ArgumentResolutionFailedException {
 //        given
         var command = HowLongAdminCommand.DELETE;
+        var month = 10;
+        var day = 22;
 
 //        when
         when(args.getCommand())
                 .thenReturn(command);
+        when(args.getMonth())
+                .thenReturn(month);
+        when(args.getDay())
+                .thenReturn(day);
+
 
         var c = commandFactory.resolveCommand(args);
 
 
 //        then
         assertThat(c).isInstanceOf(DeleteCommand.class);
+
+        var deleteCommand = (DeleteCommand) c;
+
+        assertThat(deleteCommand.getTimesheetManagementService())
+                .isEqualTo(managementService);
+        assertThat(deleteCommand.getMonth())
+                .isEqualTo(month);
+        assertThat(deleteCommand.getDay())
+                .isEqualTo(day);
 
     }
 
@@ -74,14 +91,19 @@ class CommandFactoryTest {
         var updateMode = HowLongAdminUpdateMode.START;
         var month = 5;
         var day = 10;
-        LocalTime startTime = LocalTime.of(16, 15, 15);
+        var startTime = LocalDateTime.of(Calendar.getInstance().get(Calendar.YEAR), month, day, 16, 15, 10);
 
 //        when
         when(args.getCommand())
                 .thenReturn(command);
         when(args.getUpdateMode())
                 .thenReturn(updateMode);
-
+        when(args.getMonth())
+                .thenReturn(month);
+        when(args.getDay())
+                .thenReturn(day);
+        when(args.getStartTime())
+                .thenReturn(startTime);
 
         var c = commandFactory.resolveCommand(args);
         var updateStartCommand = (UpdateStartCommand) c;
@@ -104,13 +126,19 @@ class CommandFactoryTest {
         var updateMode = HowLongAdminUpdateMode.END;
         var month = 5;
         var day = 10;
-        LocalTime endTime = LocalTime.of(16, 15, 15);
+        var endTime = LocalDateTime.of(Calendar.getInstance().get(Calendar.YEAR), month, day, 17, 7, 10);
 
 //        when
         when(args.getCommand())
                 .thenReturn(command);
         when(args.getUpdateMode())
                 .thenReturn(updateMode);
+        when(args.getMonth())
+                .thenReturn(month);
+        when(args.getDay())
+                .thenReturn(day);
+        when(args.getEndTime())
+                .thenReturn(endTime);
 
 
         var c = commandFactory.resolveCommand(args);
@@ -133,14 +161,22 @@ class CommandFactoryTest {
         var updateMode = HowLongAdminUpdateMode.FULL;
         var month = 5;
         var day = 10;
-        LocalTime startTime = LocalTime.of(16, 10, 15);
-        LocalTime endTime = LocalTime.of(16, 15, 15);
+        var startTime = LocalDateTime.of(Calendar.getInstance().get(Calendar.YEAR), month, day, 16, 5, 10);
+        var endTime = LocalDateTime.of(Calendar.getInstance().get(Calendar.YEAR), month, day, 17, 7, 10);
 
 //        when
         when(args.getCommand())
                 .thenReturn(command);
         when(args.getUpdateMode())
                 .thenReturn(updateMode);
+        when(args.getMonth())
+                .thenReturn(month);
+        when(args.getDay())
+                .thenReturn(day);
+        when(args.getStartTime())
+                .thenReturn(startTime);
+        when(args.getEndTime())
+                .thenReturn(endTime);
 
 
         var c = commandFactory.resolveCommand(args);

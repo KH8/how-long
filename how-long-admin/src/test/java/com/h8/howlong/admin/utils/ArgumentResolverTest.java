@@ -1,11 +1,10 @@
 package com.h8.howlong.admin.utils;
 
-import com.h8.howlong.admin.configuration.HowLongAdminCommand;
-import org.assertj.core.util.Arrays;
-import org.junit.jupiter.api.Test;
+import com.h8.howlong.admin.configuration.*;
+import org.assertj.core.util.*;
+import org.junit.jupiter.api.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.*;
 
 class ArgumentResolverTest {
 
@@ -62,20 +61,96 @@ class ArgumentResolverTest {
         //then
         assertThat(thrown)
                 .isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Command argument 'UNKNOWN' is invalid");
+                .hasMessage("Improper command argument");
     }
 
     @Test
-    void shouldReturnFullUpdateMode() {
+    void shouldReturnFullUpdateMode() throws ArgumentResolutionFailedException {
+
+//        given
+        var args = Arrays.array("delete", "--start-time=16:10:12", "--end-time=17:15:18");
+
+//        when
+        var a = new ArgumentResolver(args);
+        var result = a.getUpdateMode();
+
+//        then
+        assertThat(result)
+                .isEqualTo(HowLongAdminUpdateMode.FULL);
     }
 
     @Test
-    void shouldReturnStartUpdateMode() {
+    void shouldReturnStartUpdateMode() throws ArgumentResolutionFailedException {
+
+//        given
+        var args = Arrays.array("delete", "--start-time=16:10:12");
+
+//        when
+        var a = new ArgumentResolver(args);
+        var result = a.getUpdateMode();
+
+//        then
+        assertThat(result)
+                .isEqualTo(HowLongAdminUpdateMode.START);
     }
 
     @Test
-    void shouldReturnEndUpdateMode() {
+    void shouldReturnEndUpdateMode() throws ArgumentResolutionFailedException {
+
+//        given
+        var args = Arrays.array("delete", "--end-time=16:10:12");
+
+//        when
+        var a = new ArgumentResolver(args);
+        var result = a.getUpdateMode();
+
+//        then
+        assertThat(result)
+                .isEqualTo(HowLongAdminUpdateMode.END);
     }
 
+    @Test
+    void shouldReturnDay() throws ArgumentResolutionFailedException {
+
+//        given
+        var arguments = Arrays.array("--day=30","--month=9");
+
+//        when
+        var ar = new ArgumentResolver(arguments);
+        var day =  ar.getDay();
+
+//        then
+        assertThat(day).isEqualTo(30);
+    }
+
+    @Test
+    void shouldThrowAnExceptionForInvalidDayArgument() {
+
+//        given
+        var args = Arrays.array("--day=31","--month=9");
+
+//        when
+        var a = new ArgumentResolver(args);
+        Throwable thrown = catchThrowable(a::getCommand);
+
+//        then
+        assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
+                .hasMessage("Improper command argument");
+    }
+
+    @Test
+    void shouldThrowAnExceptionForInvalidMonthArgument() {
+
+//        given
+        var args = Arrays.array("--month=35");
+
+//        when
+        var a = new ArgumentResolver(args);
+        Throwable thrown = catchThrowable(a::getCommand);
+
+//        then
+        assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
+                .hasMessage("Improper command argument");
+    }
 
 }
