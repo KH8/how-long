@@ -9,6 +9,8 @@ import com.h8.howlong.utils.Logger;
 
 public class HowLongAdmin {
 
+    private static final String LS = System.lineSeparator();
+
     private static final HowLongAdminContext applicationContext;
 
     static {
@@ -35,21 +37,19 @@ public class HowLongAdmin {
     }
 
     private static String printUsage() {
-        return "The following arguments are available:\n" +
-                "\n" +
-                "- `LIST` --month={MONTH}\n" +
-                "\n" +
-                "    Lists all records for given month.\n" +
-                "    Month argument is optional, if not provided current month is taken.\n" +
-                "\n" +
-                "- `UPDATE` --month={MONTH} --day={DAY} --start-time={hh:mm:ss} --end-time={hh:mm:ss}\n" +
-                "\n" +
-                "    Updates record of given month and day.\n" +
-                "    If record does not exist new record is created.\n" +
-                "\n" +
-                "- `DELETE` --month={MONTH} --day={DAY}\n" +
-                "\n" +
-                "    Deletes record of given month and day.";
+        return ""
+                + "The following arguments are available:" + LS
+                + LS
+                + "- LIST --month={MONTH}" + LS
+                + "  Lists all records for given month." + LS
+                + "  Month argument is optional, if not provided current month is taken." + LS
+                + LS
+                + "- UPDATE --month={MONTH} --day={DAY} --start-time={hh:mm:ss} --end-time={hh:mm:ss}" + LS
+                + "  Updates record of given month and day." + LS
+                + "  If record does not exist new record is created." + LS
+                + LS
+                + "- DELETE --month={MONTH} --day={DAY}" + LS
+                + "  Deletes record of given month and day.";
     }
 
 }
