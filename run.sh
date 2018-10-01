@@ -13,10 +13,12 @@ admin() {
 
 case "$1" in
     'app')
-            app
+            shift 1
+            app $@
             ;;
     'admin')
-            admin
+            shift 1
+            admin $@
             ;;
     *)
             echo
