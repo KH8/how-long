@@ -41,23 +41,32 @@ public class CommandFactory {
 
     private Command resolveUpdateCommand(ArgumentResolver args)
             throws ArgumentResolutionFailedException {
-        var mode = args.getUpdateMode();
-        switch (mode) {
-            case START:
-                return new UpdateStartCommand(
-                        timesheetManagementService,
-                        args.getMonth(), args.getDay(), args.getStartTime());
-            case END:
-                return new UpdateEndCommand(
-                        timesheetManagementService,
-                        args.getMonth(), args.getDay(), args.getEndTime());
-            case FULL:
-                return new UpdateFullCommand(
-                        timesheetManagementService,
-                        args.getMonth(), args.getDay(), args.getStartTime(), args.getEndTime());
-            default:
-                throw new ArgumentResolutionFailedException("Could not update mode");
+        var startTime = args.getStartTime();
+        var endTime = args.getEndTime();
+
+        if (startTime.isPresent() && endTime.isPresent()) {
+            return new UpdateFullCommand(
+                    timesheetManagementService,
+                    args.getMonth(), args.getDay(),
+                    startTime.get(),
+                    endTime.get());
         }
+
+        if (startTime.isPresent()) {
+            return new UpdateStartCommand(
+                    timesheetManagementService,
+                    args.getMonth(), args.getDay(),
+                    startTime.get());
+        }
+
+        if (endTime.isPresent()) {
+            return new UpdateEndCommand(
+                    timesheetManagementService,
+                    args.getMonth(), args.getDay(),
+                    endTime.get());
+        }
+
+        throw new ArgumentResolutionFailedException("Could not update mode");
     }
 
     private Command resolveDeleteCommand(ArgumentResolver args)

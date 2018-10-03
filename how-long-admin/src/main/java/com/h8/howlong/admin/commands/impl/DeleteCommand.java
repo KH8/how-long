@@ -7,12 +7,8 @@ import com.h8.howlong.admin.services.TimesheetManagementService;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.text.DateFormatSymbols;
-import java.util.Locale;
-
 @Data
 @EqualsAndHashCode(callSuper = true)
-
 public class DeleteCommand extends AbstractManagementCommand {
 
     private final Integer month;
@@ -28,13 +24,16 @@ public class DeleteCommand extends AbstractManagementCommand {
 
     @Override
     public CommandResult execute() {
-        String monthName = new DateFormatSymbols(Locale.ENGLISH).getMonths()[month - 1];
         try {
             timesheetManagementService.delete(month, day);
+            return CommandResult.ok(
+                    String.format("The day '%s'.'%s' has been deleted",
+                            day, month));
         } catch (TimesheetManagementFailedException e) {
-            return CommandResult.error(String.format("The day '%s' of '%s' has not been found and therefore, has not been deleted", day, monthName));
+            return CommandResult.error(
+                    String.format("The day '%s'.'%s' could not be deleted because of an exception: %s",
+                            day, month, e.getMessage()));
         }
-        return CommandResult.ok(String.format("The day '%s' of '%s' has been deleted", day, monthName));
     }
 
 }
