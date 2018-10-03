@@ -37,7 +37,8 @@ class ArgumentResolverTest {
     }
 
     @Test
-    void shouldResolveDeleteCommand() throws ArgumentResolutionFailedException {
+    void shouldResolveDeleteCommand()
+            throws ArgumentResolutionFailedException {
         //given
         var args = Arrays.array("Delete");
 
@@ -61,96 +62,75 @@ class ArgumentResolverTest {
         //then
         assertThat(thrown)
                 .isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Improper command argument");
+                .hasMessage("Unknown command 'UNKNOWN'");
     }
 
     @Test
-    void shouldReturnFullUpdateMode() throws ArgumentResolutionFailedException {
-
-//        given
-        var args = Arrays.array("delete", "--start-time=16:10:12", "--end-time=17:15:18");
-
-//        when
-        var a = new ArgumentResolver(args);
-        var result = a.getUpdateMode();
-
-//        then
-        assertThat(result)
-                .isEqualTo(HowLongAdminUpdateMode.FULL);
-    }
-
-    @Test
-    void shouldReturnStartUpdateMode() throws ArgumentResolutionFailedException {
-
-//        given
-        var args = Arrays.array("delete", "--start-time=16:10:12");
-
-//        when
-        var a = new ArgumentResolver(args);
-        var result = a.getUpdateMode();
-
-//        then
-        assertThat(result)
-                .isEqualTo(HowLongAdminUpdateMode.START);
-    }
-
-    @Test
-    void shouldReturnEndUpdateMode() throws ArgumentResolutionFailedException {
-
-//        given
-        var args = Arrays.array("delete", "--end-time=16:10:12");
-
-//        when
-        var a = new ArgumentResolver(args);
-        var result = a.getUpdateMode();
-
-//        then
-        assertThat(result)
-                .isEqualTo(HowLongAdminUpdateMode.END);
-    }
-
-    @Test
-    void shouldReturnDay() throws ArgumentResolutionFailedException {
-
-//        given
+    void shouldReturnProperDayArgument()
+            throws ArgumentResolutionFailedException {
+        //given
         var arguments = Arrays.array("--day=30","--month=9");
 
-//        when
+        //when
         var ar = new ArgumentResolver(arguments);
         var day =  ar.getDay();
 
-//        then
+        //then
         assertThat(day).isEqualTo(30);
     }
 
     @Test
-    void shouldThrowAnExceptionForInvalidDayArgument() {
+    void shouldThrowAnExceptionForDayArgumentAboveUpperBound() {
+        //given
+        var args = Arrays.array("LIST", "--day=31","--month=9");
 
-//        given
-        var args = Arrays.array("--day=31","--month=9");
-
-//        when
+        //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getCommand);
+        Throwable thrown = catchThrowable(a::getDay);
 
-//        then
+        //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Improper command argument");
+                .hasMessage("Day value '31' is invalid for month '9'");
+    }
+
+
+    @Test
+    void shouldThrowAnExceptionForDayArgumentBelowLowerBound() {
+        fail("test not implemented");
     }
 
     @Test
-    void shouldThrowAnExceptionForInvalidMonthArgument() {
+    void shouldThrowAnExceptionForMissingDayArgument() {
+        fail("test not implemented");
+    }
 
-//        given
-        var args = Arrays.array("--month=35");
+    @Test
+    void shouldReturnProperMonthArgument() {
+        fail("test not implemented");
+    }
 
-//        when
+    @Test
+    void shouldReturnProperCurrentMonthIfMonthArgumentIsMissing() {
+        fail("test not implemented");
+    }
+
+    @Test
+    void shouldThrowAnExceptionForMonthArgumentAboveUpperBound() {
+        //given
+        var args = Arrays.array("LIST", "--month=13");
+
+        //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getCommand);
+        Throwable thrown = catchThrowable(a::getMonth);
 
-//        then
+        //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Improper command argument");
+                .hasMessage("Month value '13' is invalid");
+    }
+
+    @Test
+    void shouldThrowAnExceptionForMonthArgumentBelowLowerBound() {
+        fail("test not implemented");
     }
 
 }

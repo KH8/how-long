@@ -29,7 +29,8 @@ public class CommandFactory {
             case DELETE:
                 return resolveDeleteCommand(args);
         }
-        throw new ArgumentResolutionFailedException("Could not resolve command");
+        throw new ArgumentResolutionFailedException(
+                "Could not resolve command");
     }
 
     private Command resolveListCommand(ArgumentResolver args)
@@ -66,7 +67,8 @@ public class CommandFactory {
                     endTime.get());
         }
 
-        throw new ArgumentResolutionFailedException("Could not update mode");
+        throw new ArgumentResolutionFailedException(
+                "Could not resolve update command for given combination of arguments");
     }
 
     private Command resolveDeleteCommand(ArgumentResolver args)
