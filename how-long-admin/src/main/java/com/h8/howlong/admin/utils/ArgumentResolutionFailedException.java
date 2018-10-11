@@ -6,7 +6,7 @@ public class ArgumentResolutionFailedException extends Exception {
         super(message);
     }
 
-    public ArgumentResolutionFailedException(String message, Throwable cause) {
+    ArgumentResolutionFailedException(String message, Throwable cause) {
         super(message, cause);
     }
 
