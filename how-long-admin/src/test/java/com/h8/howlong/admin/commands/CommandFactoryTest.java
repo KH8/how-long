@@ -188,7 +188,7 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //
 
-        HowLongAdminCommand commandClass = mock(HowLongAdminCommand.class);
+        var commandClass = mock(HowLongAdminCommand.class);
         Whitebox.setField(commandClass, "unknown", "UNKNOWN");
 
 
