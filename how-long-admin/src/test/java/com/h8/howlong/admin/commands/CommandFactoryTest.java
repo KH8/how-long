@@ -1,16 +1,20 @@
 package com.h8.howlong.admin.commands;
 
 import com.h8.howlong.admin.commands.impl.*;
-import com.h8.howlong.admin.configuration.*;
-import com.h8.howlong.admin.services.*;
-import com.h8.howlong.admin.utils.*;
-import org.junit.jupiter.api.*;
+import com.h8.howlong.admin.configuration.HowLongAdminCommand;
+import com.h8.howlong.admin.services.TimesheetManagementService;
+import com.h8.howlong.admin.utils.ArgumentResolutionFailedException;
+import com.h8.howlong.admin.utils.ArgumentResolver;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import java.time.*;
-import java.util.*;
+import java.time.LocalTime;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 class CommandFactoryTest {
 
@@ -180,14 +184,57 @@ class CommandFactoryTest {
 
 
     @Test
-    void shouldThrowAnExceptionWhenCommandArgumentCannotBeResolved() {
-        fail("test not implemented");
+    void shouldThrowAnExceptionWhenCommandArgumentCannotBeResolved()
+            throws ArgumentResolutionFailedException {
+        //
+
+        HowLongAdminCommand commandClass = mock(HowLongAdminCommand.class);
+        Whitebox.setField(commandClass, "unknown", "UNKNOWN");
+
+
+        //when
+        when(args.getCommand())
+                .thenReturn(commandClass);
+
+
+        Throwable thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
+
+        //than
+        assertThat(thrown)
+                .isInstanceOf(ArgumentResolutionFailedException.class)
+                .hasMessage("Could not resolve command");
     }
 
 
     @Test
-    void shouldThrowAnExceptionForMissingUpdateTimes() {
-        fail("test not implemented");
+    void shouldThrowAnExceptionForMissingUpdateTimes()
+            throws ArgumentResolutionFailedException {
+        //given
+        var command = HowLongAdminCommand.UPDATE;
+        var month = 5;
+        var day = 10;
+        Optional<LocalTime> startTime = Optional.empty();
+        Optional<LocalTime> endTime = Optional.empty();
+
+        //when
+        when(args.getCommand())
+                .thenReturn(command);
+        when(args.getMonth())
+                .thenReturn(month);
+        when(args.getDay())
+                .thenReturn(day);
+        when(args.getStartTime())
+                .thenReturn(startTime);
+        when(args.getEndTime())
+                .thenReturn(endTime);
+
+        Throwable thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
+
+        //than
+        assertThat(thrown)
+                .isInstanceOf(ArgumentResolutionFailedException.class)
+                .hasMessage("Could not resolve update command for given combination of arguments");
     }
+
 
 }
