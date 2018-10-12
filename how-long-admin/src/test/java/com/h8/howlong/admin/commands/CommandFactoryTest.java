@@ -186,23 +186,33 @@ class CommandFactoryTest {
     @Test
     void shouldThrowAnExceptionWhenCommandArgumentCannotBeResolved()
             throws ArgumentResolutionFailedException {
-        //given
-
-        var commandClass = mock(HowLongAdminCommand.class);
-        Whitebox.setField(commandClass, "unknown", "UNKNOWN");
-
-
         //when
         when(args.getCommand())
-                .thenReturn(commandClass);
+                .thenReturn(null);
 
 
         Throwable thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
 
         //than
         assertThat(thrown)
+                .isInstanceOf(NullPointerException.class);
+    }
+
+    @Test
+    void shouldThrowAnExceptionWhenGetCommandMethodThrowsException()
+            throws ArgumentResolutionFailedException {
+        //given
+
+        //when
+        when(args.getCommand())
+                .thenThrow(new ArgumentResolutionFailedException("Unknown command 'command'"));
+
+        Throwable thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
+
+        //than
+        assertThat(thrown)
                 .isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Could not resolve command");
+                .hasMessage("Unknown command 'command'");
     }
 
 
