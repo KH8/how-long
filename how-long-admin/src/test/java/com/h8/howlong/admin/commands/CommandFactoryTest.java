@@ -191,7 +191,7 @@ class CommandFactoryTest {
                 .thenReturn(null);
 
 
-        Throwable thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
+        var thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
 
         //than
         assertThat(thrown)
@@ -207,7 +207,7 @@ class CommandFactoryTest {
         when(args.getCommand())
                 .thenThrow(new ArgumentResolutionFailedException("Unknown command 'command'"));
 
-        Throwable thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
+        var thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
 
         //than
         assertThat(thrown)
@@ -238,7 +238,7 @@ class CommandFactoryTest {
         when(args.getEndTime())
                 .thenReturn(endTime);
 
-        Throwable thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
+        var thrown = catchThrowable(() -> commandFactory.resolveCommand(args));
 
         //than
         assertThat(thrown)

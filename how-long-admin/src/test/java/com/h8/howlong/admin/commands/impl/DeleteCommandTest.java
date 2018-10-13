@@ -41,8 +41,7 @@ class DeleteCommandTest {
         assertThat(monthCaptor.getValue()).isEqualTo(month);
         assertThat(dayCaptor.getValue()).isEqualTo(day);
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' has been deleted");
-        assertThat(commandResult)
+                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' has been deleted")
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
 
@@ -57,8 +56,7 @@ class DeleteCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be deleted because of an exception: test");
-        assertThat(commandResult)
+                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be deleted because of an exception: test")
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 

@@ -77,8 +77,7 @@ class UpdateFullCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test");
-        assertThat(commandResult)
+                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test")
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 
@@ -93,8 +92,7 @@ class UpdateFullCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test");
-        assertThat(commandResult)
+                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test")
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 }

@@ -47,8 +47,7 @@ class UpdateStartCommandTest {
         assertThat(dayCaptor.getValue()).isEqualTo(day);
         assertThat(startCaptor.getValue()).isEqualTo(start);
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' has been updated");
-        assertThat(commandResult)
+                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' has been updated")
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
 
@@ -63,8 +62,7 @@ class UpdateStartCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test");
-        assertThat(commandResult)
+                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test")
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 }

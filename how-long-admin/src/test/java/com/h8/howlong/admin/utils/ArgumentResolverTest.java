@@ -61,7 +61,7 @@ class ArgumentResolverTest {
 
         //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getCommand);
+        var thrown = catchThrowable(a::getCommand);
 
         //then
         assertThat(thrown)
@@ -90,7 +90,7 @@ class ArgumentResolverTest {
 
         //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getDay);
+        var thrown = catchThrowable(a::getDay);
 
         //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
@@ -105,7 +105,7 @@ class ArgumentResolverTest {
 
         //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getDay);
+        var thrown = catchThrowable(a::getDay);
 
         //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
@@ -119,7 +119,7 @@ class ArgumentResolverTest {
 
         //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getDay);
+        var thrown = catchThrowable(a::getDay);
 
         //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
@@ -161,7 +161,7 @@ class ArgumentResolverTest {
 
         //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getMonth);
+        var thrown = catchThrowable(a::getMonth);
 
         //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
@@ -175,7 +175,7 @@ class ArgumentResolverTest {
 
         //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getMonth);
+        var thrown = catchThrowable(a::getMonth);
 
         //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
@@ -218,7 +218,7 @@ class ArgumentResolverTest {
 
         //when
         var a = new ArgumentResolver(args);
-        Throwable thrown = catchThrowable(a::getStartTime);
+        var thrown = catchThrowable(a::getStartTime);
 
         //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)

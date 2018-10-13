@@ -29,8 +29,8 @@ public class TimesheetManagementService {
         WorkDay workday = contextService.getWorkDayOf(month, day)
                 .orElse(contextService.createWorkDayOfGivenDate(startTime, startTime));
 
-        if (workday.getEnd().isBefore(startTime)) {
-            var message = String.format("Provided end time '%s' is before start time '%s' of the given day",
+        if (startTime.isAfter(workday.getEnd())) {
+            var message = String.format("Provided start time '%s' is after end time '%s' of the given day",
                     startTime, workday.getEnd());
             throw new TimesheetManagementFailedException(message);
         }
@@ -46,9 +46,9 @@ public class TimesheetManagementService {
         WorkDay workday = contextService.getWorkDayOf(month, day)
                 .orElse(contextService.createWorkDayOfGivenDate(endTime, endTime));
 
-        if (workday.getStart().isAfter(endTime)) {
-            var message = String.format("Provided start time '%s' is after end time '%s' of the given day",
-                    workday.getStart(), endTime);
+        if (endTime.isBefore(workday.getStart())) {
+            var message = String.format("Provided end time '%s' is before start time '%s' of the given day",
+                    endTime, workday.getStart());
             throw new TimesheetManagementFailedException(message);
         }
 
