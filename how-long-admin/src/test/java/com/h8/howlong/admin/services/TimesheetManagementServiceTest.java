@@ -8,7 +8,7 @@ import org.mockito.ArgumentCaptor;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
-public class TimesheetManagementServiceTest {
+class TimesheetManagementServiceTest {
 
     private TimesheetManagementService service;
 
@@ -21,7 +21,7 @@ public class TimesheetManagementServiceTest {
     }
 
     @Test
-    public void shouldCallDeleteOnContextService()
+    void shouldCallDeleteOnContextService()
             throws TimesheetManagementFailedException {
         //given
         int month = 10;
@@ -34,8 +34,8 @@ public class TimesheetManagementServiceTest {
         service.delete(month, day);
 
         //then
-        ArgumentCaptor<Integer> monthCaptor = ArgumentCaptor.forClass(Integer.class);
-        ArgumentCaptor<Integer> dayCaptor = ArgumentCaptor.forClass(Integer.class);
+        var monthCaptor = ArgumentCaptor.forClass(Integer.class);
+        var dayCaptor = ArgumentCaptor.forClass(Integer.class);
         verify(contextService, times(1)).deleteWorkday(monthCaptor.capture(), dayCaptor.capture());
 
         assertThat(monthCaptor.getValue()).isEqualTo(month);
