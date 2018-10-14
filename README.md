@@ -1,4 +1,4 @@
-[![CircleCI](https://circleci.com/gh/krzysztofreczek/how-long/tree/master.svg?style=svg)](https://circleci.com/gh/krzysztofreczek/how-long/tree/master)
+[![CircleCI](https://circleci.com/gh/krzysztofreczek/how-long/tree/master.svg?style=shield)](https://circleci.com/gh/krzysztofreczek/how-long/tree/master)
 
 # How-Long application
 
