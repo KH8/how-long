@@ -1,26 +1,30 @@
-package com.h8.howlong.admin.services;
+package com.h8.howlong.admin.commands.impl;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import com.h8.howlong.services.TimesheetContextService;
+import com.h8.howlong.admin.commands.AbstractManagementCommand;
+import com.h8.howlong.admin.commands.CommandResult;
+import com.h8.howlong.admin.services.TimesheetManagementService;
 import com.h8.howlong.utils.DurationUtils;
 import com.h8.howlong.utils.print.PrintBuilder;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.time.Duration;
 import java.time.format.DateTimeFormatter;
 
-@Singleton
-public class ListCommand {
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class ListCommand extends AbstractManagementCommand {
 
-    private final TimesheetContextService service;
+    private final Integer month;
 
-    @Inject
-    public ListCommand(TimesheetContextService service) {
-        this.service = service;
+    public ListCommand(TimesheetManagementService timesheetManagementService, Integer month) {
+        super(timesheetManagementService);
+        this.month = month;
     }
 
-    public String list(int month) {
-        var timesheet = service.getTimesheetForMonth(month);
+    @Override
+    public CommandResult execute() {
+        var timesheet = timesheetManagementService.getTimesheet(month);
         var b = PrintBuilder.builder();
         b.ln(String.format("Timesheet for: <c2018/%02d>", month));
         timesheet.forEach(w ->
@@ -31,7 +35,7 @@ public class ListCommand {
                         DurationUtils.format(Duration.between(w.getStart(), w.getEnd())))
                 )
         );
-        return b.build();
+        return CommandResult.ok(b.build());
     }
 
 }
