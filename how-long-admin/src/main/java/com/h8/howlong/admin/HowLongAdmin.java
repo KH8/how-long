@@ -1,7 +1,6 @@
 package com.h8.howlong.admin;
 
 import com.google.inject.Guice;
-import com.h8.howlong.admin.commands.CommandResultStatus;
 import com.h8.howlong.admin.configuration.HowLongAdminContext;
 import com.h8.howlong.admin.utils.ArgumentResolutionFailedException;
 import com.h8.howlong.admin.utils.ArgumentResolver;
@@ -23,17 +22,30 @@ public class HowLongAdmin {
         try {
             var command = applicationContext.getCommandFactory().resolveCommand(arguments);
             var result = command.execute();
-            if (CommandResultStatus.SUCCESS.equals(result.getStatus())) {
-                Logger.log(result.getMessage());
+            if (result.isSuccessful()) {
+                printSuccess(result.getMessage());
             } else {
-                Logger.log("Command failed because of an error:");
-                Logger.log(result.getMessage());
-                Logger.log(printUsage());
+                printError(result.getMessage());
             }
         } catch (ArgumentResolutionFailedException e) {
-            e.printStackTrace();
-            System.out.print(printUsage());
+            printError(e);
         }
+    }
+
+    private static void printSuccess(String message) {
+        Logger.log("Command executed successfully:");
+        Logger.log(message);
+    }
+
+    private static void printError(String message) {
+        Logger.log("Command failed because of an error:");
+        Logger.log(message);
+        Logger.log(printUsage());
+    }
+
+    private static void printError(Exception e) {
+        printError(e.getMessage());
+        e.printStackTrace();
     }
 
     private static String printUsage() {

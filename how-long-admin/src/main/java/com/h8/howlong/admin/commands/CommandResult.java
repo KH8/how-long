@@ -19,4 +19,8 @@ public class CommandResult {
         return new CommandResult(message, CommandResultStatus.ERROR);
     }
 
+    public boolean isSuccessful() {
+        return CommandResultStatus.SUCCESS.equals(this.status);
+    }
+
 }
