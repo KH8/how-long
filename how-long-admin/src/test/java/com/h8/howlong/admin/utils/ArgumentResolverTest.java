@@ -1,57 +1,24 @@
 package com.h8.howlong.admin.utils;
 
-import com.h8.howlong.admin.configuration.HowLongAdminCommand;
-import org.assertj.core.util.Arrays;
-import org.junit.jupiter.api.Test;
+import com.h8.howlong.admin.configuration.*;
+import org.assertj.core.util.*;
+import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.*;
+import org.junit.jupiter.params.provider.*;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
+import java.time.*;
+import java.util.stream.*;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.catchThrowable;
+import static org.assertj.core.api.Assertions.*;
 
 class ArgumentResolverTest {
 
-    @Test
-    void shouldResolveListCommand()
-            throws ArgumentResolutionFailedException {
-        //given
-        var args = Arrays.array("List");
-
-        //when
-        var a = new ArgumentResolver(args);
-        var result = a.getCommand();
-
-        //then
-        assertThat(result).isEqualTo(HowLongAdminCommand.LIST);
-    }
-
-    @Test
-    void shouldResolveUpdateCommand()
-            throws ArgumentResolutionFailedException {
-        //given
-        var args = Arrays.array("Update");
-
-        //when
-        var a = new ArgumentResolver(args);
-        var result = a.getCommand();
-
-        //then
-        assertThat(result).isEqualTo(HowLongAdminCommand.UPDATE);
-    }
-
-    @Test
-    void shouldResolveDeleteCommand()
-            throws ArgumentResolutionFailedException {
-        //given
-        var args = Arrays.array("Delete");
-
-        //when
-        var a = new ArgumentResolver(args);
-        var result = a.getCommand();
-
-        //then
-        assertThat(result).isEqualTo(HowLongAdminCommand.DELETE);
+    static private Stream<Arguments> resolveCommandArgumentsProvider() {
+        return Stream.of(
+                Arguments.of("List", HowLongAdminCommand.LIST),
+                Arguments.of("Update", HowLongAdminCommand.UPDATE),
+                Arguments.of("Delete", HowLongAdminCommand.DELETE)
+        );
     }
 
     @Test
@@ -83,33 +50,19 @@ class ArgumentResolverTest {
         assertThat(day).isEqualTo(30);
     }
 
-    @Test
-    void shouldThrowAnExceptionForDayArgumentAboveUpperBound() {
+    @ParameterizedTest(name = "command = {0}")
+    @MethodSource("resolveCommandArgumentsProvider")
+    void shouldResolveCommand(String commandName, Enum command)
+            throws ArgumentResolutionFailedException {
         //given
-        var args = Arrays.array("LIST", "--day=31","--month=9");
+        var args = Arrays.array(commandName);
 
         //when
         var a = new ArgumentResolver(args);
-        var thrown = catchThrowable(a::getDay);
+        var result = a.getCommand();
 
         //then
-        assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Day value '31' is invalid for month '9'");
-    }
-
-
-    @Test
-    void shouldThrowAnExceptionForDayArgumentBelowLowerBound() {
-        //given
-        var args = Arrays.array("LIST", "--day=0", "--month=9");
-
-        //when
-        var a = new ArgumentResolver(args);
-        var thrown = catchThrowable(a::getDay);
-
-        //then
-        assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Day value '0' is invalid for month '9'");
+        assertThat(result).isEqualTo(command);
     }
 
     @Test
@@ -154,32 +107,19 @@ class ArgumentResolverTest {
         assertThat(month).isEqualTo(LocalDate.now().getMonthValue());
     }
 
-    @Test
-    void shouldThrowAnExceptionForMonthArgumentAboveUpperBound() {
+    @ParameterizedTest(name = "day = {arguments}, month = 9")
+    @ValueSource(ints = {0, 31})
+    void shouldThrowAnExceptionForAGivenImproperDayOfAMonth(int day) {
         //given
-        var args = Arrays.array("LIST", "--month=13");
+        var arguments = Arrays.array("List", String.format("--day=%s", day), "--month=9");
 
         //when
-        var a = new ArgumentResolver(args);
-        var thrown = catchThrowable(a::getMonth);
+        var a = new ArgumentResolver(arguments);
+        var thrown = catchThrowable(a::getDay);
 
         //then
         assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Month value '13' is invalid");
-    }
-
-    @Test
-    void shouldThrowAnExceptionForMonthArgumentBelowLowerBound() {
-        //given
-        var args = Arrays.array("LIST", "--month=0");
-
-        //when
-        var a = new ArgumentResolver(args);
-        var thrown = catchThrowable(a::getMonth);
-
-        //then
-        assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
-                .hasMessage("Month value '0' is invalid");
+                .hasMessage(String.format("Day value '%s' is invalid for month '9'", day));
     }
 
     @Test
@@ -196,20 +136,20 @@ class ArgumentResolverTest {
         assertThat(startTime).hasValue(LocalTime.of(11, 11, 11));
     }
 
-    @Test
-    void shouldReturnProperEndTimeArgument()
-            throws ArgumentResolutionFailedException {
+    @ParameterizedTest(name = "month = {arguments}")
+    @ValueSource(ints = {0, 13})
+    void shouldThrowAnExceptionForAGivenImproperMonthArgument(int month) {
         //given
-        var arguments = Arrays.array("UPDATE", "--month=2", "--day=2", "--end-time=12:12:12");
+        var arguments = Arrays.array("List", String.format("--month=%s", month));
 
         //when
-        var ar = new ArgumentResolver(arguments);
-        var startTime = ar.getEndTime();
+        var a = new ArgumentResolver(arguments);
+        var thrown = catchThrowable(a::getMonth);
 
         //then
-        assertThat(startTime).hasValue(LocalTime.of(12, 12, 12));
+        assertThat(thrown).isInstanceOf(ArgumentResolutionFailedException.class)
+                .hasMessage(String.format("Month value '%d' is invalid", month));
     }
-
 
     @Test
     void shouldThrowAnExceptionForIllegalTimeFormat() {
@@ -225,5 +165,17 @@ class ArgumentResolverTest {
                 .hasMessage("Could not parse 'start-time' argument as LocalTime");
     }
 
+    @Test
+    void shouldReturnProperEndTimeArgument()
+            throws ArgumentResolutionFailedException {
+        //given
+        var arguments = Arrays.array("UPDATE", "--month=2", "--day=2", "--end-time=12:12:12");
 
+        //when
+        var ar = new ArgumentResolver(arguments);
+        var endTime = ar.getEndTime();
+
+        //then
+        assertThat(endTime).hasValue(LocalTime.of(12, 12, 12));
+    }
 }
