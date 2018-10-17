@@ -25,35 +25,47 @@ public class TimesheetManagementService {
     public void updateStartTime(Integer month, Integer day, LocalTime localTime)
             throws TimesheetManagementFailedException {
         var startTime = toLocalDateTime(month, day, localTime);
+        var endTime = startTime;
 
-        WorkDay workday = contextService.getWorkDayOf(month, day)
-                .orElse(contextService.createWorkDayOfGivenDate(startTime, startTime));
+        var o = contextService.getWorkDayOf(month, day);
+        if (o.isPresent()) {
+            endTime = o.get().getEnd();
+        }
 
-        if (startTime.isAfter(workday.getEnd())) {
+        if (startTime.isAfter(endTime)) {
             var message = String.format("Provided start time '%s' is after end time '%s' of the given day",
-                    startTime, workday.getEnd());
+                    startTime, endTime);
             throw new TimesheetManagementFailedException(message);
         }
 
-        workday.setStart(startTime);
-        contextService.updateWorkDay(workday);
+        var wd = WorkDay.builder()
+                .start(startTime)
+                .end(endTime)
+                .build();
+        contextService.updateWorkDay(wd);
     }
 
     public void updateEndTime(Integer month, Integer day, LocalTime localTime)
             throws TimesheetManagementFailedException {
         var endTime = toLocalDateTime(month, day, localTime);
+        var startTime = endTime;
 
-        WorkDay workday = contextService.getWorkDayOf(month, day)
-                .orElse(contextService.createWorkDayOfGivenDate(endTime, endTime));
+        var o = contextService.getWorkDayOf(month, day);
+        if (o.isPresent()) {
+            startTime = o.get().getStart();
+        }
 
-        if (endTime.isBefore(workday.getStart())) {
+        if (endTime.isBefore(startTime)) {
             var message = String.format("Provided end time '%s' is before start time '%s' of the given day",
-                    endTime, workday.getStart());
+                    endTime, startTime);
             throw new TimesheetManagementFailedException(message);
         }
 
-        workday.setEnd(endTime);
-        contextService.updateWorkDay(workday);
+        var wd = WorkDay.builder()
+                .start(startTime)
+                .end(endTime)
+                .build();
+        contextService.updateWorkDay(wd);
     }
 
     public void delete(Integer month, Integer day)

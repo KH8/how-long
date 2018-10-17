@@ -93,13 +93,6 @@ public class TimesheetContextService {
         return deleted;
     }
 
-    public WorkDay createWorkDayOfGivenDate(LocalDateTime start, LocalDateTime end) {
-        return WorkDay.builder()
-                .start(start)
-                .end(end)
-                .build();
-    }
-
     private WorkDay createWorkDayOfToday() {
         return WorkDay.builder()
                 .start(LocalDateTime.now())
