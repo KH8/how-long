@@ -1,3 +1,5 @@
+[![CircleCI](https://circleci.com/gh/krzysztofreczek/how-long/tree/master.svg?style=shield)](https://circleci.com/gh/krzysztofreczek/how-long/tree/master)
+
 # How-Long application
 
 Project `How-Long` is a simple command line time that stores acumulated data in lightweight file-based database.
