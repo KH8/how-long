@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import com.h8.howlong.admin.configuration.HowLongAdminContext;
 import com.h8.howlong.admin.utils.ArgumentResolutionFailedException;
 import com.h8.howlong.admin.utils.ArgumentResolver;
-import com.h8.howlong.utils.Logger;
+import com.h8.howlong.utils.HowLongLogger;
 
 public class HowLongAdmin {
 
@@ -33,14 +33,14 @@ public class HowLongAdmin {
     }
 
     private static void printSuccess(String message) {
-        Logger.log("Command executed successfully:");
-        Logger.log(message);
+        HowLongLogger.log("Command executed successfully:");
+        HowLongLogger.log(message);
     }
 
     private static void printError(String message) {
-        Logger.log("Command failed because of an error:");
-        Logger.log(message);
-        Logger.log(printUsage());
+        HowLongLogger.log("Command failed because of an error:");
+        HowLongLogger.log(message);
+        HowLongLogger.log(printUsage());
     }
 
     private static void printError(Exception e) {
