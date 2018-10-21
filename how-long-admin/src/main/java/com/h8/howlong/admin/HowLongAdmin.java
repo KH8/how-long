@@ -15,7 +15,6 @@ public class HowLongAdmin {
     static {
         var injector = Guice.createInjector();
         applicationContext = injector.getInstance(HowLongAdminContext.class);
-
     }
 
     public static void main(String[] args) {
