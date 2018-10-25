@@ -1,9 +1,9 @@
 package com.h8.howlong.repositories;
 
-import com.h8.howlong.utils.Logger;
+import com.h8.howlong.utils.*;
 
 import java.io.*;
-import java.util.Optional;
+import java.util.*;
 
 public abstract class AbstractFileBasedRepository<T> {
 
@@ -20,10 +20,10 @@ public abstract class AbstractFileBasedRepository<T> {
             if (yourFile.createNewFile()) {
                 T t = initializeContent();
                 writeContent(t);
-                Logger.log("Initialized file: {}", dbFileName);
+                Logger.log("Initialized file: ", dbFileName);
             }
         } catch (IOException e) {
-            Logger.log("ERROR: Could not create file: {}", dbFileName);
+            Logger.log("ERROR: Could not create file: ", dbFileName);
             e.printStackTrace();
         }
     }
@@ -35,7 +35,7 @@ public abstract class AbstractFileBasedRepository<T> {
         ) {
             oos.writeObject(t);
         } catch (Exception e) {
-            Logger.log("ERROR: Could not write to file: {}", dbFileName);
+            Logger.log("ERROR: Could not write to file: ", dbFileName);
             e.printStackTrace();
         }
     }
@@ -48,7 +48,7 @@ public abstract class AbstractFileBasedRepository<T> {
         ) {
             return Optional.of((T) ois.readObject());
         } catch (Exception e) {
-            Logger.log("ERROR: Could not read from file: {}", dbFileName);
+            Logger.log("ERROR: Could not read from file: ", dbFileName);
             e.printStackTrace();
         }
         return Optional.empty();
