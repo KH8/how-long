@@ -4,7 +4,7 @@ import com.google.inject.Guice;
 import com.h8.howlong.app.configuration.HowLongApplicationContext;
 import com.h8.howlong.app.services.PrintingService;
 import com.h8.howlong.app.utils.ArgumentResolver;
-import com.h8.howlong.utils.HowLongLogger;
+import com.h8.howlong.utils.Logger;
 
 public class HowLongApplication {
 
@@ -19,7 +19,7 @@ public class HowLongApplication {
         applicationContext.getTimesheetService().updateWorkDayEndTime();
         var arguments = new ArgumentResolver(args);
         var service = resolvePrinter(arguments);
-        HowLongLogger.log(service.print(arguments.calendarMonth()));
+        Logger.log(service.print(arguments.calendarMonth()));
     }
 
     private static PrintingService resolvePrinter(ArgumentResolver arguments) {
