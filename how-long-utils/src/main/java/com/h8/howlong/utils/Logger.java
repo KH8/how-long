@@ -32,7 +32,7 @@ public class Logger {
         var sb = new StringBuilder();
         sb.append(formatCurrentLocalDateTime()).append(LS).append(message).append(LS);
         for (Object a : args) {
-            sb.append(a.toString()).append(LS);
+            sb.append(a.toString()).append('/').append(LS);
         }
         return sb.toString();
     }
