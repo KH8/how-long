@@ -189,7 +189,7 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
-                    <reportsDirectory>${project.parent.basedir}/target/surefire_reports</reportsDirectory>
+                    <reportsDirectory>${project.parent.basedir}/target/surefire-reports</reportsDirectory>
                 </configuration>
                 <dependencies>
                     <dependency>
