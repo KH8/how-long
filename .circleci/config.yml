@@ -19,14 +19,12 @@ jobs:
       - restore_cache:
           key: how-long-{{ checksum "pom.xml" }}
 
-      - run: mvn -DexcludeGroupIds=com.h8 dependency:go-offline
+      - run: mvn clean install
+
+      - store_test_results:
+          path: target/surefire-reports
 
       - save_cache:
           paths:
           - ~/.m2
           key: how-long-{{ checksum "pom.xml" }}
-
-      - run: mvn clean install
-
-      - store_test_results:
-          path: target/surefire-reports
