@@ -19,8 +19,9 @@ jobs:
       - restore_cache:
           key: how-long-{{ checksum "pom.xml" }}
 
-      - name: Maven install
-        command: mvn clean install
+      - run:
+          name: Maven install
+          command: mvn clean install
 
       - store_test_results:
           path: target/surefire-reports
