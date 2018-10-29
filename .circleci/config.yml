@@ -19,7 +19,7 @@ jobs:
       - restore_cache:
           key: how-long-{{ checksum "pom.xml" }}
 
-      - run: mvn dependency:go-offline
+      - run: mvn -DexcludeGroupIds=com.h8 dependency:go-offline
 
       - save_cache:
           paths:
