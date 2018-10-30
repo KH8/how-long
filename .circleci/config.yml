@@ -6,22 +6,27 @@ version: 2
 jobs:
   build:
     docker:
-      # specify the version you desire here
       - image: circleci/openjdk:11-jdk
-      
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
 
-    working_directory: ~/repo
+    working_directory: ~/how-long
 
     environment:
-      # Customize the JVM maximum heap limit
       MAVEN_OPTS: -Xmx3200m
     
     steps:
       - checkout
-        
-      # run tests!
-      - run: mvn clean install
+
+      - restore_cache:
+          key: how-long-{{ checksum "pom.xml" }}
+
+      - run:
+          name: Maven install
+          command: mvn clean install
+
+      - store_test_results:
+          path: target/surefire-reports
+
+      - save_cache:
+          paths:
+          - ~/.m2
+          key: how-long-{{ checksum "pom.xml" }}
