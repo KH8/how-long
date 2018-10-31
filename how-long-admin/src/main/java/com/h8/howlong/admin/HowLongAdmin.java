@@ -1,9 +1,10 @@
 package com.h8.howlong.admin;
 
-import com.google.inject.*;
-import com.h8.howlong.admin.configuration.*;
-import com.h8.howlong.admin.utils.*;
-import com.h8.howlong.utils.*;
+import com.google.inject.Guice;
+import com.h8.howlong.admin.configuration.HowLongAdminContext;
+import com.h8.howlong.admin.utils.ArgumentResolutionFailedException;
+import com.h8.howlong.admin.utils.ArgumentResolver;
+import com.h8.howlong.utils.Logger;
 
 public class HowLongAdmin {
 
@@ -14,7 +15,6 @@ public class HowLongAdmin {
     static {
         var injector = Guice.createInjector();
         applicationContext = injector.getInstance(HowLongAdminContext.class);
-
     }
 
     public static void main(String[] args) {
@@ -33,12 +33,14 @@ public class HowLongAdmin {
     }
 
     private static void printSuccess(String message) {
-        Logger.log("Command executed successfully:", message);
+        Logger.log("Command executed successfully:");
+        Logger.log(message);
     }
 
     private static void printError(String message) {
-        Logger.log("Command failed because of an error:", message);
-        System.out.println(printUsage());
+        Logger.log("Command failed because of an error:");
+        Logger.log(message);
+        Logger.log(printUsage());
     }
 
     private static void printError(Exception e) {

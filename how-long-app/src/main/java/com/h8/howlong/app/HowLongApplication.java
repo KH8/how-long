@@ -1,10 +1,10 @@
 package com.h8.howlong.app;
 
-import com.google.inject.*;
-import com.h8.howlong.app.configuration.*;
-import com.h8.howlong.app.services.*;
-import com.h8.howlong.app.utils.*;
-import com.h8.howlong.utils.*;
+import com.google.inject.Guice;
+import com.h8.howlong.app.configuration.HowLongApplicationContext;
+import com.h8.howlong.app.services.PrintingService;
+import com.h8.howlong.app.utils.ArgumentResolver;
+import com.h8.howlong.utils.Logger;
 
 public class HowLongApplication {
 
