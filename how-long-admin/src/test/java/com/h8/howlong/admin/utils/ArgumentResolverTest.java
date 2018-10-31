@@ -1,17 +1,26 @@
 package com.h8.howlong.admin.utils;
 
-import com.h8.howlong.admin.configuration.*;
-import org.assertj.core.util.*;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.*;
-import org.junit.jupiter.params.provider.*;
+import com.h8.howlong.admin.configuration.HowLongAdminCommand;
+import org.assertj.core.util.Arrays;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import java.time.*;
-import java.util.stream.*;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.Calendar;
+import java.util.stream.Stream;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.catchThrowable;
 
 class ArgumentResolverTest {
+
+    private int currentMonth;
+    private int currentDay;
 
     static private Stream<Arguments> resolveCommandArgumentsProvider() {
         return Stream.of(
@@ -36,18 +45,10 @@ class ArgumentResolverTest {
                 .hasMessage("Unknown command 'UNKNOWN'");
     }
 
-    @Test
-    void shouldReturnProperDayArgument()
-            throws ArgumentResolutionFailedException {
-        //given
-        var arguments = Arrays.array("--day=30","--month=9");
-
-        //when
-        var ar = new ArgumentResolver(arguments);
-        var day =  ar.getDay();
-
-        //then
-        assertThat(day).isEqualTo(30);
+    @BeforeEach
+    void setUp() {
+        currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 
     @ParameterizedTest(name = "command = {0}")
@@ -66,9 +67,23 @@ class ArgumentResolverTest {
     }
 
     @Test
+    void shouldReturnProperDayArgument()
+            throws ArgumentResolutionFailedException {
+        //given
+        var arguments = Arrays.array(String.format("--day=%d", currentDay), String.format("--month=%d", currentMonth));
+
+        //when
+        var ar = new ArgumentResolver(arguments);
+        var dayReturned = ar.getDay();
+
+        //then
+        assertThat(dayReturned).isEqualTo(currentDay);
+    }
+
+    @Test
     void shouldThrowAnExceptionForMissingDayArgument() {
         //given
-        var args = Arrays.array("DELETE", "--month=9");
+        var args = Arrays.array("DELETE", String.format("--month=%d", currentMonth));
 
         //when
         var a = new ArgumentResolver(args);
@@ -83,28 +98,14 @@ class ArgumentResolverTest {
     void shouldReturnProperMonthArgument()
             throws ArgumentResolutionFailedException {
         //given
-        var arguments = Arrays.array("--day=1", "--month=2");
+        var arguments = Arrays.array(String.format("--day=%d", currentDay), String.format("--month=%d", currentMonth));
 
         //when
         var ar = new ArgumentResolver(arguments);
-        var month = ar.getMonth();
+        var monthReturned = ar.getMonth();
 
         //then
-        assertThat(month).isEqualTo(2);
-    }
-
-    @Test
-    void shouldReturnProperCurrentMonthIfMonthArgumentIsMissing()
-            throws ArgumentResolutionFailedException {
-        //given
-        var arguments = Arrays.array("LIST");
-
-        //when
-        var ar = new ArgumentResolver(arguments);
-        var month = ar.getMonth();
-
-        //then
-        assertThat(month).isEqualTo(LocalDate.now().getMonthValue());
+        assertThat(monthReturned).isEqualTo(currentMonth);
     }
 
     @ParameterizedTest(name = "day = {arguments}, month = 9")
@@ -123,17 +124,17 @@ class ArgumentResolverTest {
     }
 
     @Test
-    void shouldReturnProperStartTimeArgument()
+    void shouldReturnProperCurrentMonthIfMonthArgumentIsMissing()
             throws ArgumentResolutionFailedException {
         //given
-        var arguments = Arrays.array("UPDATE", "--month=1", "--day=1", "--start-time=11:11:11");
+        var arguments = Arrays.array("LIST");
 
         //when
         var ar = new ArgumentResolver(arguments);
-        var startTime = ar.getStartTime();
+        var monthReturned = ar.getMonth();
 
         //then
-        assertThat(startTime).hasValue(LocalTime.of(11, 11, 11));
+        assertThat(monthReturned).isEqualTo(LocalDate.now().getMonthValue());
     }
 
     @ParameterizedTest(name = "month = {arguments}")
@@ -152,9 +153,25 @@ class ArgumentResolverTest {
     }
 
     @Test
+    void shouldReturnProperStartTimeArgument()
+            throws ArgumentResolutionFailedException {
+        //given
+        var arguments = Arrays.array("UPDATE", String.format("--day=%d", currentDay),
+                String.format("--month=%d", currentMonth), "--start-time=11:11:11");
+
+        //when
+        var ar = new ArgumentResolver(arguments);
+        var startTime = ar.getStartTime();
+
+        //then
+        assertThat(startTime).hasValue(LocalTime.of(11, 11, 11));
+    }
+
+    @Test
     void shouldThrowAnExceptionForIllegalTimeFormat() {
         //given
-        var args = Arrays.array("UPDATE", "--month=1", "--day=1", "--start-time=11.11.11");
+        var args = Arrays.array("UPDATE", String.format("--day=%d", currentDay),
+                String.format("--month=%d", currentMonth), "--start-time=11.11.11");
 
         //when
         var a = new ArgumentResolver(args);
@@ -169,7 +186,8 @@ class ArgumentResolverTest {
     void shouldReturnProperEndTimeArgument()
             throws ArgumentResolutionFailedException {
         //given
-        var arguments = Arrays.array("UPDATE", "--month=2", "--day=2", "--end-time=12:12:12");
+        var arguments = Arrays.array("UPDATE", String.format("--day=%d", currentDay),
+                String.format("--month=%d", currentMonth), "--end-time=12:12:12");
 
         //when
         var ar = new ArgumentResolver(arguments);

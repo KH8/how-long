@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -27,8 +28,8 @@ class TimesheetManagementServiceTest {
         contextService = mock(TimesheetContextService.class);
         service = new TimesheetManagementService(contextService);
 
-        month = 9;
-        day = 23;
+        month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 
     @Test
@@ -134,8 +135,8 @@ class TimesheetManagementServiceTest {
         //then
         assertThat(thrown)
                 .isInstanceOf(TimesheetManagementFailedException.class)
-                .hasMessage("Provided end time '%s' is before start time '%s' of the given day",
-                        endDateTimeToUpdate, workday.getStart());
+                .hasMessage(String.format("Provided end time '%s' is before start time '%s' of the given day",
+                        endDateTimeToUpdate, workday.getStart()));
     }
 
     @Test

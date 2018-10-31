@@ -7,6 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.util.Calendar;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -22,8 +24,8 @@ class DeleteCommandTest {
     @BeforeEach
     void setUp() {
         timesheetManagementService = mock(TimesheetManagementService.class);
-        month = 9;
-        day = 30;
+        month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         deleteCommand = new DeleteCommand(timesheetManagementService, month, day);
     }
 
@@ -36,12 +38,14 @@ class DeleteCommandTest {
         //then
         var monthCaptor = ArgumentCaptor.forClass(Integer.class);
         var dayCaptor = ArgumentCaptor.forClass(Integer.class);
-        verify(timesheetManagementService, times(1)).delete(monthCaptor.capture(), dayCaptor.capture());
+        verify(timesheetManagementService, times(1))
+                .delete(monthCaptor.capture(), dayCaptor.capture());
 
         assertThat(monthCaptor.getValue()).isEqualTo(month);
         assertThat(dayCaptor.getValue()).isEqualTo(day);
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' has been deleted")
+                .hasFieldOrPropertyWithValue("message",
+                        String.format("The day '%d'.'%d' has been deleted", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
 
@@ -56,7 +60,8 @@ class DeleteCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be deleted because of an exception: test")
+                .hasFieldOrPropertyWithValue("message",
+                        String.format("The day '%d'.'%d' could not be deleted because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 

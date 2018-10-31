@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalTime;
+import java.util.Calendar;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -25,8 +26,8 @@ class UpdateFullCommandTest {
     @BeforeEach
     void setUp() {
         timesheetManagementService = mock(TimesheetManagementService.class);
-        month = 9;
-        day = 30;
+        month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
         start = LocalTime.of(1, 0);
         end = LocalTime.of(1, 1);
         updateFullCommand = new UpdateFullCommand(timesheetManagementService, month, day, start, end);
@@ -61,7 +62,8 @@ class UpdateFullCommandTest {
 
 
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' has been updated");
+                .hasFieldOrPropertyWithValue("message",
+                        String.format("The day '%d'.'%d' has been updated", day, month));
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
@@ -77,7 +79,8 @@ class UpdateFullCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test")
+                .hasFieldOrPropertyWithValue("message",
+                        String.format("The day '%d'.'%d' could not be updated because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 
@@ -92,7 +95,8 @@ class UpdateFullCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test")
+                .hasFieldOrPropertyWithValue("message",
+                        String.format("The day '%d'.'%d' could not be updated because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 }
