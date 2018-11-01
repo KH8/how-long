@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,18 +27,18 @@ class TimesheetManagementServiceTest {
         contextService = mock(TimesheetContextService.class);
         service = new TimesheetManagementService(contextService);
 
-        month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        month = LocalDateTime.now().getMonthValue();
+        day = LocalDateTime.now().getDayOfMonth();
     }
 
     @Test
     void shouldCallUpdateWorkDayOnTimesheetContextServiceWithProperStartTimeArgument()
             throws TimesheetManagementFailedException {
         //given
-        var startDateTimeBeforeUpdate = LocalDateTime.of(2018, month, day, 8, 0);
-        var startDateTimeToUpdate = LocalDateTime.of(2018, month, day, 9, 15);
+        var startDateTimeBeforeUpdate = LocalDateTime.now();
+        var startDateTimeToUpdate = startDateTimeBeforeUpdate.plusHours(1);
         var startTimeToUpdate = startDateTimeToUpdate.toLocalTime();
-        var endDateTime = LocalDateTime.of(2018, month, day, 16, 45);
+        var endDateTime = startDateTimeBeforeUpdate.plusHours(3);
 
         var workday = WorkDay.builder()
                 .start(startDateTimeBeforeUpdate)
@@ -64,9 +63,9 @@ class TimesheetManagementServiceTest {
     void shouldCallUpdateWorkDayOnTimesheetContextServiceWithProperEndTimeArgument()
             throws TimesheetManagementFailedException {
         //given
-        var startDateTime = LocalDateTime.of(2018, month, day, 7, 45);
-        var endDateTimeBeforeUpdate = LocalDateTime.of(2018, month, day, 16, 0);
-        var endDateTimeToUpdate = LocalDateTime.of(2018, month, day, 17, 15);
+        var startDateTime = LocalDateTime.now();
+        var endDateTimeBeforeUpdate = startDateTime.plusHours(1);
+        var endDateTimeToUpdate = startDateTime.plusHours(2);
         var endTimeToUpdate = endDateTimeToUpdate.toLocalTime();
 
         var workday = WorkDay.builder()
@@ -90,10 +89,10 @@ class TimesheetManagementServiceTest {
 
     @Test
     void shouldThrowATimeSheetManagementFailedExceptionWhenGivenStartTimeIsAfterActualEndTime() {
-        var startDateTimeBeforeUpdate = LocalDateTime.of(2018, month, day, 8, 0);
-        var startDateTimeToUpdate = LocalDateTime.of(2018, month, day, 20, 15);
+        var startDateTimeBeforeUpdate = LocalDateTime.now();
+        var endDateTime = startDateTimeBeforeUpdate.plusHours(1);
+        var startDateTimeToUpdate = endDateTime.plusHours(1);
         var startTimeToUpdate = startDateTimeToUpdate.toLocalTime();
-        var endDateTime = LocalDateTime.of(2018, month, day, 16, 45);
 
         var workday = WorkDay.builder()
                 .start(startDateTimeBeforeUpdate)
@@ -116,9 +115,9 @@ class TimesheetManagementServiceTest {
     @Test
     void shouldThrowATimeSheetManagementFailedExceptionWhenGivenEndTimeIsBeforeActualStartTime() {
         //given
-        var startDateTime = LocalDateTime.of(2018, month, day, 15, 45);
-        var endDateTimeBeforeUpdate = LocalDateTime.of(2018, month, day, 16, 0);
-        var endDateTimeToUpdate = LocalDateTime.of(2018, month, day, 14, 15);
+        var startDateTime = LocalDateTime.now();
+        var endDateTimeBeforeUpdate = startDateTime.plusHours(2);
+        var endDateTimeToUpdate = startDateTime.minusHours(1);
         var endTimeToUpdate = endDateTimeToUpdate.toLocalTime();
 
         var workday = WorkDay.builder()

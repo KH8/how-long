@@ -10,8 +10,9 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Calendar;
+import java.time.temporal.ChronoUnit;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -19,6 +20,7 @@ import static org.assertj.core.api.Assertions.catchThrowable;
 
 class ArgumentResolverTest {
 
+    private LocalTime currentTime;
     private int currentMonth;
     private int currentDay;
 
@@ -28,6 +30,13 @@ class ArgumentResolverTest {
                 Arguments.of("Update", HowLongAdminCommand.UPDATE),
                 Arguments.of("Delete", HowLongAdminCommand.DELETE)
         );
+    }
+
+    @BeforeEach
+    void setUp() {
+        currentMonth = LocalDateTime.now().getMonthValue();
+        currentDay = LocalDateTime.now().getDayOfMonth();
+        currentTime = LocalTime.now().truncatedTo(ChronoUnit.SECONDS);
     }
 
     @Test
@@ -43,12 +52,6 @@ class ArgumentResolverTest {
         assertThat(thrown)
                 .isInstanceOf(ArgumentResolutionFailedException.class)
                 .hasMessage("Unknown command 'UNKNOWN'");
-    }
-
-    @BeforeEach
-    void setUp() {
-        currentMonth = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        currentDay = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
     }
 
     @ParameterizedTest(name = "command = {0}")
@@ -157,14 +160,14 @@ class ArgumentResolverTest {
             throws ArgumentResolutionFailedException {
         //given
         var arguments = Arrays.array("UPDATE", String.format("--day=%d", currentDay),
-                String.format("--month=%d", currentMonth), "--start-time=11:11:11");
+                String.format("--month=%d", currentMonth), String.format("--start-time=%s", currentTime));
 
         //when
         var ar = new ArgumentResolver(arguments);
         var startTime = ar.getStartTime();
 
         //then
-        assertThat(startTime).hasValue(LocalTime.of(11, 11, 11));
+        assertThat(startTime).hasValue(currentTime);
     }
 
     @Test
@@ -187,13 +190,13 @@ class ArgumentResolverTest {
             throws ArgumentResolutionFailedException {
         //given
         var arguments = Arrays.array("UPDATE", String.format("--day=%d", currentDay),
-                String.format("--month=%d", currentMonth), "--end-time=12:12:12");
+                String.format("--month=%d", currentMonth), String.format("--end-time=%s", currentTime));
 
         //when
         var ar = new ArgumentResolver(arguments);
         var endTime = ar.getEndTime();
 
         //then
-        assertThat(endTime).hasValue(LocalTime.of(12, 12, 12));
+        assertThat(endTime).hasValue(currentTime);
     }
 }

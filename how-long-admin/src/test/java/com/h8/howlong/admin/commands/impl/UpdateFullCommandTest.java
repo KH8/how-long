@@ -7,8 +7,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Calendar;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
@@ -26,10 +26,10 @@ class UpdateFullCommandTest {
     @BeforeEach
     void setUp() {
         timesheetManagementService = mock(TimesheetManagementService.class);
-        month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        start = LocalTime.of(1, 0);
-        end = LocalTime.of(1, 1);
+        start = LocalTime.now();
+        end = start.plusHours(1);
+        month = LocalDateTime.now().getMonthValue();
+        day = LocalDateTime.now().getDayOfMonth();
         updateFullCommand = new UpdateFullCommand(timesheetManagementService, month, day, start, end);
     }
 

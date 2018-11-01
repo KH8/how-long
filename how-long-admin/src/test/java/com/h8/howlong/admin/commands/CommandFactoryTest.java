@@ -8,8 +8,8 @@ import com.h8.howlong.admin.utils.ArgumentResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Calendar;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -37,7 +37,7 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.LIST;
-        var month = Calendar.getInstance().get(Calendar.MONTH) + 1;
+        var month = LocalDateTime.now().getMonthValue();
 
         //when
         when(args.getCommand())
@@ -60,8 +60,8 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.DELETE;
-        var month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        var month = LocalDateTime.now().getMonthValue();
+        var day = LocalDateTime.now().getDayOfMonth();
 
         //when
         when(args.getCommand())
@@ -90,8 +90,8 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        var month = LocalDateTime.now().getMonthValue();
+        var day = LocalDateTime.now().getDayOfMonth();
         var startTime = LocalTime.now();
 
         //when
@@ -120,8 +120,8 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        var month = LocalDateTime.now().getMonthValue();
+        var day = LocalDateTime.now().getDayOfMonth();
         var endTime = LocalTime.now();
 
         //when
@@ -150,10 +150,10 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
-        var startTime = LocalTime.now().minusHours(1);
-        var endTime = LocalTime.now();
+        var month = LocalDateTime.now().getMonthValue();
+        var day = LocalDateTime.now().getDayOfMonth();
+        var startTime = LocalTime.now();
+        var endTime = LocalTime.now().plusHours(1);
 
         //when
         when(args.getCommand())
@@ -211,14 +211,13 @@ class CommandFactoryTest {
                 .hasMessage("Unknown command 'command'");
     }
 
-
     @Test
     void shouldThrowAnExceptionForMissingUpdateTimes()
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = Calendar.getInstance().get(Calendar.MONTH) + 1;
-        var day = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+        var month = LocalDateTime.now().getMonthValue();
+        var day = LocalDateTime.now().getDayOfMonth();
         Optional<LocalTime> startTime = Optional.empty();
         Optional<LocalTime> endTime = Optional.empty();
 

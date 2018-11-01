@@ -19,9 +19,9 @@ class ListCommandTest {
     @Test
     void shouldReturnProperlyFormattedTimesheetForAGivenMonth() {
         //given
-        var month = 9;
-        var start = LocalDateTime.of(2018, 9, 23, 1, 1);
-        var end = LocalDateTime.of(2018, 9, 23, 1, 2);
+        var start = LocalDateTime.now();
+        var end = start.plusHours(1);
+        var month = start.getMonthValue();
 
         var timesheetManagementService = mock(TimesheetManagementService.class);
         var listCommand = new ListCommand(timesheetManagementService, month);
@@ -29,7 +29,11 @@ class ListCommandTest {
         var list = List.of(workday);
         var pb = PrintBuilder.builder();
 
-        pb.ln(String.format("Timesheet for: <c2018/%02d>", month) + LS + "<c23> | 01:01:00 | 01:02:00 | 00:01");
+        pb.ln(String.format("Timesheet for: <c%02d/%d>", start.getYear(), month) + LS
+                + String.format("<c%02d> | %02d:%02d:%02d | %02d:%02d:%02d | 01:00",
+                start.getDayOfMonth(),
+                start.getHour(), start.getMinute(), start.getSecond(),
+                end.getHour(), end.getMinute(), end.getSecond()));
 
         //when
         when(timesheetManagementService.getTimesheet(month))
