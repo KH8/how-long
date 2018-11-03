@@ -24,8 +24,9 @@ class DeleteCommandTest {
     @BeforeEach
     void setUp() {
         timesheetManagementService = mock(TimesheetManagementService.class);
-        month = LocalDateTime.now().getMonthValue();
-        day = LocalDateTime.now().getDayOfMonth();
+        var current = LocalDateTime.now();
+        month = current.getMonthValue();
+        day = current.getDayOfMonth();
         deleteCommand = new DeleteCommand(timesheetManagementService, month, day);
     }
 
@@ -45,7 +46,7 @@ class DeleteCommandTest {
         assertThat(dayCaptor.getValue()).isEqualTo(day);
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("message",
-                        String.format("The day '%d'.'%d' has been deleted", day, month))
+                        String.format("The day '%d.%d' has been deleted", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
 
@@ -61,10 +62,7 @@ class DeleteCommandTest {
         //then
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("message",
-                        String.format("The day '%d'.'%d' could not be deleted because of an exception: test", day, month))
+                        String.format("The day '%d.%d' could not be deleted because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
-
-
-
 }

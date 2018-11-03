@@ -27,11 +27,11 @@ public class DeleteCommand extends AbstractManagementCommand {
         try {
             timesheetManagementService.delete(month, day);
             return CommandResult.ok(
-                    String.format("The day '%s'.'%s' has been deleted",
+                    String.format("The day '%d.%d' has been deleted",
                             day, month));
         } catch (TimesheetManagementFailedException e) {
             return CommandResult.error(
-                    String.format("The day '%s'.'%s' could not be deleted because of an exception: %s",
+                    String.format("The day '%d.%d' could not be deleted because of an exception: %s",
                             day, month, e.getMessage()));
         }
     }

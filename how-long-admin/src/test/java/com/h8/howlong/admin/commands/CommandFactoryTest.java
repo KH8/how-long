@@ -25,11 +25,17 @@ class CommandFactoryTest {
 
     private CommandFactory commandFactory;
 
+    private Integer month;
+    private Integer day;
+
     @BeforeEach
     void setUp() {
         args = mock(ArgumentResolver.class);
         managementService = mock(TimesheetManagementService.class);
         commandFactory = new CommandFactory(managementService);
+        var current = LocalDateTime.now();
+        month = current.getMonthValue();
+        day = current.getDayOfMonth();
     }
 
     @Test
@@ -37,7 +43,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.LIST;
-        var month = LocalDateTime.now().getMonthValue();
 
         //when
         when(args.getCommand())
@@ -60,8 +65,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.DELETE;
-        var month = LocalDateTime.now().getMonthValue();
-        var day = LocalDateTime.now().getDayOfMonth();
 
         //when
         when(args.getCommand())
@@ -90,8 +93,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = LocalDateTime.now().getMonthValue();
-        var day = LocalDateTime.now().getDayOfMonth();
         var startTime = LocalTime.now();
 
         //when
@@ -120,8 +121,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = LocalDateTime.now().getMonthValue();
-        var day = LocalDateTime.now().getDayOfMonth();
         var endTime = LocalTime.now();
 
         //when
@@ -150,8 +149,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = LocalDateTime.now().getMonthValue();
-        var day = LocalDateTime.now().getDayOfMonth();
         var startTime = LocalTime.now();
         var endTime = LocalTime.now().plusHours(1);
 
@@ -216,8 +213,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = LocalDateTime.now().getMonthValue();
-        var day = LocalDateTime.now().getDayOfMonth();
         Optional<LocalTime> startTime = Optional.empty();
         Optional<LocalTime> endTime = Optional.empty();
 

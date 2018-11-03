@@ -27,8 +27,9 @@ class TimesheetManagementServiceTest {
         contextService = mock(TimesheetContextService.class);
         service = new TimesheetManagementService(contextService);
 
-        month = LocalDateTime.now().getMonthValue();
-        day = LocalDateTime.now().getDayOfMonth();
+        var current = LocalDateTime.now();
+        month = current.getMonthValue();
+        day = current.getDayOfMonth();
     }
 
     @Test

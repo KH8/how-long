@@ -26,9 +26,10 @@ class UpdateStartCommandTest {
     @BeforeEach
     void setUp() {
         timesheetManagementService = mock(TimesheetManagementService.class);
-        month = LocalDateTime.now().getMonthValue();
-        day = LocalDateTime.now().getDayOfMonth();
-        start = LocalTime.now();
+        var current = LocalDateTime.now();
+        start = current.toLocalTime();
+        month = current.getMonthValue();
+        day = current.getDayOfMonth();
         updateStartCommand = new UpdateStartCommand(timesheetManagementService, month, day, start);
     }
 
@@ -50,7 +51,7 @@ class UpdateStartCommandTest {
         assertThat(startCaptor.getValue()).isEqualTo(start);
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("message",
-                        String.format("The day '%d'.'%d' has been updated", day, month))
+                        String.format("The day '%d.%d' has been updated", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
 
@@ -66,7 +67,7 @@ class UpdateStartCommandTest {
         //then
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("message",
-                        String.format("The day '%d'.'%d' could not be updated because of an exception: test", day, month))
+                        String.format("The day '%d.%d' could not be updated because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 }

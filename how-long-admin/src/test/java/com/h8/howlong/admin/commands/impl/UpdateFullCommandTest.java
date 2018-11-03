@@ -26,10 +26,11 @@ class UpdateFullCommandTest {
     @BeforeEach
     void setUp() {
         timesheetManagementService = mock(TimesheetManagementService.class);
-        start = LocalTime.now();
+        var current = LocalDateTime.now();
+        start = current.toLocalTime();
         end = start.plusHours(1);
-        month = LocalDateTime.now().getMonthValue();
-        day = LocalDateTime.now().getDayOfMonth();
+        month = current.getMonthValue();
+        day = current.getDayOfMonth();
         updateFullCommand = new UpdateFullCommand(timesheetManagementService, month, day, start, end);
     }
 
@@ -63,7 +64,7 @@ class UpdateFullCommandTest {
 
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("message",
-                        String.format("The day '%d'.'%d' has been updated", day, month));
+                        String.format("The day '%d.%d' has been updated", day, month));
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
@@ -80,7 +81,7 @@ class UpdateFullCommandTest {
         //then
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("message",
-                        String.format("The day '%d'.'%d' could not be updated because of an exception: test", day, month))
+                        String.format("The day '%d.%d' could not be updated because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 
@@ -96,7 +97,7 @@ class UpdateFullCommandTest {
         //then
         assertThat(commandResult)
                 .hasFieldOrPropertyWithValue("message",
-                        String.format("The day '%d'.'%d' could not be updated because of an exception: test", day, month))
+                        String.format("The day '%d.%d' could not be updated because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 }
