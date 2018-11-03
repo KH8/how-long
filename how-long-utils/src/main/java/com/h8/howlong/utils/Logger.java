@@ -2,9 +2,9 @@ package com.h8.howlong.utils;
 
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -18,21 +18,16 @@ public class Logger {
     public static void log(String message, Object... args) {
         var m = setUpLogMessage(message, args);
         logToFile(m);
-        logToConsole(m);
     }
 
     private static void logToFile(String message) {
-        try {
-            var pw = new PrintWriter(new FileWriter(new File(LOG_FILE_PATH + '\\' + LOG_FILE_NAME), true), true);
+        var logFile = new File(Paths.get(LOG_FILE_PATH, LOG_FILE_NAME).toString());
+        try (var pw = new PrintWriter(logFile)) {
             pw.println(message);
         } catch (IOException e) {
             System.out.println("ERROR: Could not log to a file.");
             e.printStackTrace();
         }
-    }
-
-    private static void logToConsole(String message) {
-        System.out.println(message);
     }
 
     private static String setUpLogMessage(String message, Object... args) {
