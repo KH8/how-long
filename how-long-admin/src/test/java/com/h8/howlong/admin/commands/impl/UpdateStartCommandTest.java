@@ -7,6 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -25,9 +26,10 @@ class UpdateStartCommandTest {
     @BeforeEach
     void setUp() {
         timesheetManagementService = mock(TimesheetManagementService.class);
-        month = 9;
-        day = 30;
-        start = LocalTime.of(1, 1);
+        var current = LocalDateTime.now();
+        start = current.toLocalTime();
+        month = current.getMonthValue();
+        day = current.getDayOfMonth();
         updateStartCommand = new UpdateStartCommand(timesheetManagementService, month, day, start);
     }
 
@@ -41,13 +43,15 @@ class UpdateStartCommandTest {
         var monthCaptor = ArgumentCaptor.forClass(Integer.class);
         var dayCaptor = ArgumentCaptor.forClass(Integer.class);
         var startCaptor = ArgumentCaptor.forClass(LocalTime.class);
-        verify(timesheetManagementService, times(1)).updateStartTime(monthCaptor.capture(), dayCaptor.capture(), startCaptor.capture());
+        verify(timesheetManagementService, times(1)).
+                updateStartTime(monthCaptor.capture(), dayCaptor.capture(), startCaptor.capture());
 
         assertThat(monthCaptor.getValue()).isEqualTo(month);
         assertThat(dayCaptor.getValue()).isEqualTo(day);
         assertThat(startCaptor.getValue()).isEqualTo(start);
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' has been updated")
+                .hasFieldOrPropertyWithValue("message",
+                        String.format("The day '%d.%d' has been updated", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.SUCCESS);
     }
 
@@ -62,7 +66,8 @@ class UpdateStartCommandTest {
 
         //then
         assertThat(commandResult)
-                .hasFieldOrPropertyWithValue("message", "The day '30'.'9' could not be updated because of an exception: test")
+                .hasFieldOrPropertyWithValue("message",
+                        String.format("The day '%d.%d' could not be updated because of an exception: test", day, month))
                 .hasFieldOrPropertyWithValue("status", CommandResultStatus.ERROR);
     }
 }

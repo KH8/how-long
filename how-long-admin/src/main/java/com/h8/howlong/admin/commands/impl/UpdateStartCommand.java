@@ -32,11 +32,11 @@ public class UpdateStartCommand extends AbstractManagementCommand {
         try {
             timesheetManagementService.updateStartTime(month, day, start);
             return CommandResult.ok(
-                    String.format("The day '%s'.'%s' has been updated",
+                    String.format("The day '%d.%d' has been updated",
                             day, month));
         } catch (TimesheetManagementFailedException e) {
             return CommandResult.error(
-                    String.format("The day '%s'.'%s' could not be updated because of an exception: %s",
+                    String.format("The day '%d.%d' could not be updated because of an exception: %s",
                             day, month, e.getMessage()));
         }
     }

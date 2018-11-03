@@ -8,6 +8,7 @@ import com.h8.howlong.admin.utils.ArgumentResolver;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Optional;
 
@@ -24,11 +25,17 @@ class CommandFactoryTest {
 
     private CommandFactory commandFactory;
 
+    private Integer month;
+    private Integer day;
+
     @BeforeEach
     void setUp() {
         args = mock(ArgumentResolver.class);
         managementService = mock(TimesheetManagementService.class);
         commandFactory = new CommandFactory(managementService);
+        var current = LocalDateTime.now();
+        month = current.getMonthValue();
+        day = current.getDayOfMonth();
     }
 
     @Test
@@ -36,7 +43,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.LIST;
-        var month = 10;
 
         //when
         when(args.getCommand())
@@ -59,8 +65,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.DELETE;
-        var month = 10;
-        var day = 22;
 
         //when
         when(args.getCommand())
@@ -70,9 +74,7 @@ class CommandFactoryTest {
         when(args.getDay())
                 .thenReturn(day);
 
-
         var c = commandFactory.resolveCommand(args);
-
 
         //then
         assertThat(c).isInstanceOf(DeleteCommand.class);
@@ -91,8 +93,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = 5;
-        var day = 10;
         var startTime = LocalTime.now();
 
         //when
@@ -114,7 +114,6 @@ class CommandFactoryTest {
         assertThat(updateStartCommand.getMonth()).isEqualTo(month);
         assertThat(updateStartCommand.getDay()).isEqualTo(day);
         assertThat(updateStartCommand.getStart()).isEqualTo(startTime);
-
     }
 
     @Test
@@ -122,8 +121,6 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = 5;
-        var day = 10;
         var endTime = LocalTime.now();
 
         //when
@@ -145,7 +142,6 @@ class CommandFactoryTest {
         assertThat(updateEndCommand.getMonth()).isEqualTo(month);
         assertThat(updateEndCommand.getDay()).isEqualTo(day);
         assertThat(updateEndCommand.getEnd()).isEqualTo(endTime);
-
     }
 
     @Test
@@ -153,10 +149,8 @@ class CommandFactoryTest {
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = 5;
-        var day = 10;
-        var startTime = LocalTime.now().minusHours(1);
-        var endTime = LocalTime.now();
+        var startTime = LocalTime.now();
+        var endTime = LocalTime.now().plusHours(1);
 
         //when
         when(args.getCommand())
@@ -181,7 +175,6 @@ class CommandFactoryTest {
         assertThat(updateFullCommand.getStart()).isEqualTo(startTime);
         assertThat(updateFullCommand.getEnd()).isEqualTo(endTime);
     }
-
 
     @Test
     void shouldThrowAnExceptionWhenCommandArgumentCannotBeResolved()
@@ -215,14 +208,11 @@ class CommandFactoryTest {
                 .hasMessage("Unknown command 'command'");
     }
 
-
     @Test
     void shouldThrowAnExceptionForMissingUpdateTimes()
             throws ArgumentResolutionFailedException {
         //given
         var command = HowLongAdminCommand.UPDATE;
-        var month = 5;
-        var day = 10;
         Optional<LocalTime> startTime = Optional.empty();
         Optional<LocalTime> endTime = Optional.empty();
 
@@ -245,6 +235,4 @@ class CommandFactoryTest {
                 .isInstanceOf(ArgumentResolutionFailedException.class)
                 .hasMessage("Could not resolve update command for given combination of arguments");
     }
-
-
 }
